@@ -2,16 +2,18 @@
 
 ## Descrizione
 
-**DanceEmotion** è un'applicazione web progettata per favorire l'incontro tra ballerini e scuole di danza.  
+**DanceEmotion** è un'applicazione web progettata per favorire l'incontro tra ballerini e scuole di danza.
 Gli utenti possono scoprire corsi, eventi e materiali, prenotare lezioni, lasciare recensioni e ricevere aggiornamenti dalle scuole seguite.
-
----
 
 ## Video di presentazione
 
 Nel seguente video di presentazione viene effettuata una breve panoramica del progetto, vengono discusse le **scelte progettuali adottate**: layout, struttura del database, componenti principali, logiche funzionali e scelte implementative.
 
 - [DanceEmotion - Presentazione progetto](https://www.youtube.com/watch?v=Lqv96jZUZwA)
+
+## Demo
+
+Tramite il seguente link [danceemotion.cristiancrazy.it](http://danceemotion.cristiancrazy.it) è possibile accedere ad una versione dimostrativa della piattaforma.
 
 ## Installazione
 
@@ -56,9 +58,9 @@ Nella cartella del progetto è presente un file nel quale dovranno essere specif
 
 La cartella `docs/` contiene tutti i materiali di supporto al progetto:
 
-| Link                              | File               | Contenuto                                                          |
-|-------------------------------------|-----------------------|-----------------------------------------------------------------------|
+| Link                                | File                  | Contenuto                                                                |
+|-------------------------------------|-----------------------|--------------------------------------------------------------------------|
 | [Leggi](docs/database.pdf)          | `database.pdf`        | Specifiche del database, struttura relazionale e dettagli implementativi |
-| [Leggi](docs/diagramma.pdf)         | `diagramma.pdf`       | Diagramma del database, struttura e relazioni |
+| [Leggi](docs/diagramma.pdf)         | `diagramma.pdf`       | Diagramma del database, struttura e relazioni                            |
 
 > Nota: nel `database.pdf` non era stato definito l'utilizzo di `Corsi.IDScuola` (chiave esterna che referenzia `Scuola`). 
