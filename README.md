@@ -5,11 +5,7 @@
 **DanceEmotion** è un'applicazione web progettata per favorire l'incontro tra ballerini e scuole di danza.  
 Gli utenti possono scoprire corsi, eventi e materiali, prenotare lezioni, lasciare recensioni e ricevere aggiornamenti dalle scuole seguite.
 
-Progetto sviluppato per il corso di *Metodologie di Programmazione per il Web*  - Università del Piemonte Orientale.
-
 ---
-
-> **NOTA BENE**: la consegna sul DIR consente un caricamento massimo di **20MB**. Pertanto il contenuto video che dovrebbe essere mostrato non è presente ZIP. Ho previsto un sistema di fallback- non ci dovrebbero essere problemi.
 
 ## Video di presentazione
 
@@ -21,7 +17,9 @@ Nel seguente video di presentazione viene effettuata una breve panoramica del pr
 
 Per installare il progetto sarà necessario:
 
-1. Accedere alla cartella del progetto
+0. Accedere alla cartella del progetto
+
+1. Scaricare il framework **Bootstrap 5** e **Bootstrap Icons** e inserirne il contenuto nelle directory `public/bs` e `public/bs-icons`, come indicato nei `README.txt`.
 
 2. Lanciare il comando `npm install` e attendere l'installazione delle dipendenze.
 
@@ -38,7 +36,6 @@ Nella cartella del progetto è presente un file nel quale dovranno essere specif
 | `SESSIONS`    | Il secret per la gestione della sessione         |
 | `GOOGLEAPIKEY`| L'API KEY per Distance Matrix API di Google      |
 
-
 ## Credenziali di esempio
 
 | Email                                | Password            | Tipo         |
@@ -53,8 +50,6 @@ Nella cartella del progetto è presente un file nel quale dovranno essere specif
 | dancegalaxy@email.com                | DG_School           | Scuola       |
 | flydance@email.com                   | FD_School           | Scuola       |
 
-
-
 ## Documentazione aggiuntiva 
 
 È inoltre disponibile ulteriore documentazione tecnica nella cartella `/docs`.
@@ -63,7 +58,6 @@ La cartella `docs/` contiene tutti i materiali di supporto al progetto:
 
 | Link                              | File               | Contenuto                                                          |
 |-------------------------------------|-----------------------|-----------------------------------------------------------------------|
-| [Leggi](docs/requisiti.pdf)         | `requisiti.pdf`       | Requisiti di progetto concordati con i docenti                |
 | [Leggi](docs/database.pdf)          | `database.pdf`        | Specifiche del database, struttura relazionale e dettagli implementativi |
 | [Leggi](docs/diagramma.pdf)         | `diagramma.pdf`       | Diagramma del database, struttura e relazioni |
 
