@@ -1,0 +1,150 @@
+<!--
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: Schools finder page for DanceEMotion platform. It includes a search bar, a list of dance schools with cards, 
+    and a footer with useful links and social media icons.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description"
+        content="DanceEMotion - Cerca le migliori scuole di ballo in Italia e le loro offerte formative. Scopri corsi di Urban, balli latino-americani, classici, danze standard e molto altro!">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • Scuole◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <!-- Custom JS -->
+    <script src="/javascripts/geolocalizzazione-scuole.js" defer></script>
+</head>
+
+<body class="bg-white">
+    <!-- Navbar principale -->
+    <%- include('components/header'); %>
+        <!-- Fine Navbar principale-->
+
+        <!-- Inizio sezione principale -->
+        <main>
+            <!-- Barra di ricerca -->
+            <header class="p-2">
+                <div class="container-fluid mt-3 mb-3">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <form class="d-flex gap-2" role="search" action="/scuole" method="GET">
+                                <input class="form-control" name="name" type="search" placeholder="Cerca scuole..."
+                                    aria-label="Search">
+                                <!-- Location filter -->
+                                <button class="btn btn-outline-secondary d-inline-flex" type="button" id="locationButton"><i class="bi bi-geo"></i>Localizzazione</button>
+                                <!-- Filters -->
+                                <button class="btn btn-outline-secondary d-inline-flex" id="filterButton"
+                                    type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
+                                    <i class="bi bi-filter"></i>Filtri
+                                </button>
+                                <% if(searchMode) { %>
+                                    <a class="btn btn-outline-danger" href="/scuole">Reset</a>
+                                <% } %>
+                                    <button class="btn btn-outline-success" type="submit">Cerca</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Fine barra di ricerca -->
+            <!-- Card orizzontali delle scuole di ballo: -->
+
+            <div class="container-fluid <%= (!schools || schools.length === 0) ? 'vh-100' : '' %>">
+                <% if (!schools || schools.length===0) { %>
+                    <div class="alert alert-warning text-center" role="alert">
+                        Nessuna scuola di ballo trovata.
+                    </div>
+                <% } else { %>
+                    <div class="row justify-content-center p-2">
+                        <% schools.forEach(function(school) { %>
+                        <div class="col-md-10 mb-3">
+                            <div class="card flex-column flex-md-row h-100 shadow-sm hover-effect align-items-center">
+                                <div class="d-flex align-items-center justify-content-center p-3 w-100 w-md-auto">
+                                    <img src="<%= (school.ImmagineProfilo)? school.ImmagineProfilo : '/images/logo-black.png' %>" class="card-img-left img-fluid rounded-circle border border-3 border-secondary" alt="Logo Scuola di Ballo" style="max-width: 180px; max-height: 180px; width: 100%; height: 100%; aspect-ratio: 1 / 1; object-fit: cover;">
+                                        </div>
+                                        <div class="card-body w-100">
+                                            <h5 class="card-title">
+                                                <%= school.Nome %>
+                                            </h5>
+                                            <p class="card-text" style="white-space: pre-line; word-break: break-all;">
+                                                <%= (school.Descrizione)? (school.Descrizione.length >= 170) ? school.Descrizione.slice(0, 170) + '...' : school.Descrizione : '' %>
+                                            </p>
+                                            <p class="card-text mb-2">
+                                                <% if(school.courses && school.courses.length > 0) school.courses.forEach(function(course) { %>
+                                                    <span class="badge bg-<%= course.colore %>">
+                                                        <i class="bi bi-music-note-beamed"></i>
+                                                        <%= course.Nome %>
+                                                    </span>
+                                                    <% }) %>
+                                            </p>
+                                            <% if (school.distance) { %>
+                                            <p class="card-text"><i class="bi bi-map"></i> Distanza: <%= school.distance.testo %> </p>
+                                            <% } %>
+                                            <p class="card-text"><i class="bi bi-geo-alt"></i>
+                                                <%= school.Citta + ', ' + school.Regione %>
+                                            </p>
+                                            <p class="card-text"><i class="bi bi-star-fill text-warning"></i>
+                                                <% let rev = reviews.filter(r => r.IDScuola === school.IDScuola); %>
+                                                <% if(rev[0]) { %>
+                                                    <%= (rev[0].AverageRating)? 'Valutazione: ' + rev[0].AverageRating.toFixed(1) + '/5' : 'Nessuna valutazione' %>
+                                                <% } %>
+                                            </p>
+                                            <a href="<%= '/scuola-spec/' + school.IDScuola + '/' %>" class="btn btn-primary">Visita</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% })} %>
+                        </div>
+
+                        <!-- Fine card orizzontali delle scuole di ballo -->
+        </main>
+        <!-- Fine sezione principale -->
+
+        <!-- Footer della pagina -->
+        <%- include('components/footer'); %>
+        <!-- Footer della pagina -->
+
+
+        <!-- Offcanvas Filtro -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="filterOffcanvasLabel">Filtra le scuole</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <form action="/scuole" method="GET">
+                    <div class="mb-3">
+                        <label for="filterSchoolName" class="form-label">
+                            <i class="bi bi-building me-2"></i>Nome scuola
+                        </label>
+                        <input type="text" class="form-control" id="filterSchoolName" name="name" placeholder="Inserisci il nome della scuola">
+                    </div>
+                    <div class="mb-3">
+                        <label for="filterCity" class="form-label">
+                            <i class="bi bi-geo-alt me-2"></i>Città
+                        </label>
+                        <input type="text" class="form-control" id="filterCity" name="city" placeholder="Inserisci la città">
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Applica filtri</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+</body>
+</html>

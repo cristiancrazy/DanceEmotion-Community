@@ -1,0 +1,62 @@
+<!--
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: DanceEMotion - Index page template featuring a video background, sections for schools and events
+    and a footer with links and social media icons.
+-->
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DanceEMotion - Scopri le migliori scuole di ballo e gli eventi più emozionanti. Unisciti alla nostra community!">
+    <title>►DanceEMotion - <%= error.status + ' ' + error.message %> ◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <link rel="stylesheet" href="/stylesheets/errore.css">
+</head>
+
+<body class="bg-white">
+    <!-- Navbar principale -->
+    <%- include('components/header'); %>
+    <!-- Fine Navbar principale-->
+
+    <main id="main-alert" class="container my-5 vh-100">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="alert alert-danger text-center py-5" role="alert">
+                    <h2 class="mb-4">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <%= error.status %> - 
+                        <% if(error.status == 404) { %>
+                            <%= "Pagina/Risorsa non trovata" %>
+                        <% } else if ((error.status == 403) || (error.status == 401)) { %>
+                            <%= "Accesso negato: non puoi accedere a questa risorsa." %>
+                        <% } else { %>
+                            <%= error.message %>
+                        <% } %>
+                    </h2>
+                    <p class="lead">Si è verificato un errore durante l'elaborazione della tua richiesta.</p>
+                    <p class="mt-4">Per favore, torna alla home o prova a tornare indietro.</p>
+                    <a href="/" class="btn btn-primary me-2">Torna alla Home</a>
+                    <button class="btn btn-secondary" onclick="window.history.back()">Torna Indietro</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <%- include('components/footer'); %>
+</body>
+</html>

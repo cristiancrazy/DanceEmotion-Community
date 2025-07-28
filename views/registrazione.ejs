@@ -1,0 +1,207 @@
+<!-- 
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: DanceEMotion Registration Page for dancers and schools.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • Registrazione◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <link rel="stylesheet" href="/stylesheets/registrazione.css">
+</head>
+
+<body class="bg-white vh-100">
+    <!-- Navbar -->
+    <%- include('components/header'); %>
+    <!-- Fine navbar -->
+
+    <!-- Contenuto principale -->
+    <main class="mt-4 mb-4">
+        <div class="container d-flex justify-content-center align-items-center">
+            <div class="card shadow-lg p-4" id="signup-form">
+                <h2 class="text-center mb-4">Registrazione</h2>
+                <!-- Tabs for Login -->
+                <ul class="nav nav-tabs mb-4" role="tablist">
+                    <li class="nav-item w-50" role="presentation">
+                        <button class="nav-link active text-black w-100" id="dancer-tab" data-bs-toggle="tab" data-bs-target="#dancer-signup" type="button" role="tab" aria-controls="dancer-signup" aria-selected="true">
+                            <i class="bi bi-person"></i> Ballerini
+                        </button>
+                    </li>
+                    <li class="nav-item w-50" role="presentation">
+                        <button class="nav-link text-black w-100" id="school-tab" data-bs-toggle="tab" data-bs-target="#school-signup" type="button" role="tab" aria-controls="school-signup" aria-selected="false">
+                            <i class="bi bi-building"></i> Scuole
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <!-- Dancer Signup -->
+                    <div class="tab-pane fade show active" id="dancer-signup" role="tabpanel" aria-labelledby="dancer-tab">
+                        <form action="/registrazione/ballerini" method="POST">
+                            <!-- Name and surname -->
+                            <div class="mb-3">
+                                <label for="dancer-name" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="dancer-name" name="name" placeholder="Inserisci il tuo nome" autocomplete="off" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dancer-surname" class="form-label">Cognome</label>
+                                <input type="text" class="form-control" id="dancer-surname" name="surname" placeholder="Inserisci il tuo cognome" autocomplete="off" required>
+                            </div>
+                            <!-- Date of birth -->
+                            <div class="mb-3">
+                                <label for="dancer-birthdate" class="form-label">Data di Nascita</label>
+                                <input type="date" class="form-control" id="dancer-birthdate" name="birthdate" required>
+                            </div>
+                            <!-- Tel -->
+                            <div class="mb-3">
+                                <label for="dancer-phone" class="form-label">Telefono</label>
+                                <input type="tel" class="form-control" id="dancer-phone" name="phone" placeholder="Inserisci il tuo numero di telefono" autocomplete="off" required>
+                            </div>  
+                            <!-- Email and password -->
+                            <div class="mb-3">
+                                <label for="dancer-email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="dancer-email" name="email" placeholder="Inserisci la tua email" autocomplete="off" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dancer-password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="dancer-password" name="password" placeholder="Inserisci la tua password" autocomplete="off" required>
+                            </div>
+                            <!-- Confirm password -->
+                            <div class="mb-3">
+                                <label for="dancer-confirm-password" class="form-label">Conferma Password</label>
+                                <input type="password" class="form-control" id="dancer-confirm-password" name="confirmPassword" placeholder="Conferma la tua password" autocomplete="off" required>
+                            </div>
+                            <!-- Terms and conditions -->
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms-conditions" name="termsAccept" value="on" required>
+                                <label class="form-check-label" for="terms-conditions">
+                                    Accetto i Termini e le Condizioni
+                                </label>
+                            </div>
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary w-100">Registrati</button>
+                        </form>
+                    </div>
+                    <!-- School Signup -->
+                    <div class="tab-pane fade" id="school-signup" role="tabpanel" aria-labelledby="school-tab">
+                        <form action="/registrazione/scuole" method="POST">
+                            <!-- School Name -->
+                            <div class="mb-3">
+                                <label for="school-name" class="form-label">Nome Scuola</label>
+                                <input type="text" class="form-control" id="school-name" name="name" placeholder="Inserisci il nome della tua scuola" autocomplete="off" required>
+                            </div>
+                            <!-- School Address -->
+                            <div class="mb-3">
+                                <label for="school-address" class="form-label">Indirizzo Scuola</label>
+                                <input type="text" class="form-control mb-2" id="school-address" name="address" placeholder="Via/Piazza" autocomplete="off" required>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control mb-2" id="school-city" name="city" placeholder="Città" autocomplete="off" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control mb-2" id="school-province" name="province" placeholder="Provincia" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control mb-2" id="school-zip" name="cap" placeholder="CAP" autocomplete="off" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-select" id="school-region-select" name="region" autocomplete="off" required>
+                                            <option value="" disabled selected>Regione</option>
+                                            <option value="Lazio">Lazio</option>
+                                            <option value="Campania">Campania</option>
+                                            <option value="Sicilia">Sicilia</option>
+                                            <option value="Lombardia">Lombardia</option>
+                                            <option value="Piemonte">Piemonte</option>
+                                            <option value="Emilia Romagna">Emilia Romagna</option>
+                                            <option value="Toscana">Toscana</option>
+                                            <option value="Liguria">Liguria</option>
+                                            <option value="Marche">Marche</option>
+                                            <option value="Abruzzo">Abruzzo</option>
+                                            <option value="Umbria">Umbria</option>
+                                            <option value="Calabria">Calabria</option>
+                                            <option value="Basilicata">Basilicata</option>
+                                            <option value="Puglia">Puglia</option>
+                                            <option value="Molise">Molise</option>
+                                            <option value="Sardegna">Sardegna</option>
+                                            <option value="Friuli Venezia Giulia">Friuli Venezia Giulia</option>
+                                            <option value="Trentino Alto Adige">Trentino Alto Adige</option>
+                                            <option value="Valle d'Aosta">Valle d'Aosta</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- School Phone -->
+                            <div class="mb-3">
+                                <label for="school-phone" class="form-label">Telefono Scuola</label>
+                                <input type="tel" class="form-control" id="school-phone" name="phone" placeholder="Inserisci il numero di telefono della tua scuola" autocomplete="off" required>
+                            </div>
+                            <!-- School Email and password -->
+                            <div class="mb-3">
+                                <label for="school-email" class="form-label">Email Scuola</label>
+                                <input type="email" class="form-control" id="school-email" name="email" placeholder="Inserisci l'email della tua scuola" autocomplete="off" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="school-password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="school-password" name="password" placeholder="Inserisci la password della tua scuola" autocomplete="off" required>
+                            </div>
+
+                            <!-- Confirm password -->
+
+                            <div class="mb-3">
+                                <label for="school-confirm-password" class="form-label">Conferma Password</label>
+                                <input type="password" class="form-control" id="school-confirm-password" name="confirmPassword" placeholder="Conferma la password della tua scuola" autocomplete="off" required>
+                            </div>
+
+                            <!-- Terms and conditions -->
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms-conditions-school" name="termsAccept" value="on" required>
+                                <label class="form-check-label" for="terms-conditions-school">
+                                    Accetto i Termini e le Condizioni
+                                </label>
+                            </div>
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary w-100">Registrati</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <p class="mb-0">Hai già un account? <a href="/accesso" class="text-decoration-none">Accedi</a></p>
+                </div>
+                <% if (messages && messages.length > 0) { %>
+                <div class="alert alert-danger mt-3" role="alert">
+                    <ul class="mb-0">
+                        <% messages.forEach(function(message) { %>
+                        <li><%= message %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer della pagina -->
+    <%- include('components/footer'); %>
+    <!-- Footer della pagina -->
+</body>
+
+</html>

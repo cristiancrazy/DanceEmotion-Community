@@ -1,0 +1,434 @@
+<!--
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: FAQ page for DanceEMotion
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • FAQ◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+</head>
+
+<body class="bg-white">
+    <!-- Navbar -->
+    <%- include('components/header'); %>
+    <!-- Fine navbar -->
+
+    <!-- Categorie FAQ -->
+    <main>
+        <section class="container my-5">
+            <!-- FAQ per i Ballerini -->
+            <h2 class="mb-3 mt-4">FAQ per i Ballerini</h2>
+            <div class="accordion mb-4" id="faqAccordionBallerini">
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="faqBallerini1-heading">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqBallerini1" aria-expanded="true" aria-controls="faqBallerini1">
+                            Come posso registrarmi su DanceEMotion?
+                        </button>
+                    </h3>
+                    <div id="faqBallerini1" class="accordion-collapse collapse show"
+                        aria-labelledby="faqBallerini1-heading" data-bs-parent="#faqAccordionBallerini">
+                        <div class="accordion-body">
+                            Puoi registrarti cliccando sul pulsante "Registrati" nella pagina principale e compilando il
+                            modulo con i tuoi dati.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="faqBallerini2-heading">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqBallerini2" aria-expanded="false" aria-controls="faqBallerini2">
+                            Come posso trovare una scuola di ballo vicino a me?
+                        </button>
+                    </h3>
+                    <div id="faqBallerini2" class="accordion-collapse collapse"
+                        aria-labelledby="faqBallerini2-heading" data-bs-parent="#faqAccordionBallerini">
+                        <div class="accordion-body">
+                            Utilizza la funzione di ricerca nella sezione "Scuole" per trovare le scuole di ballo nella
+                            tua zona.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="faqBallerini3-heading">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqBallerini3" aria-expanded="false" aria-controls="faqBallerini3">
+                            Come posso trovare gli eventi più vicini a me?
+                        </button>
+                    </h3>
+                    <div id="faqBallerini3" class="accordion-collapse collapse"
+                        aria-labelledby="faqBallerini3-heading" data-bs-parent="#faqAccordionBallerini">
+                        <div class="accordion-body">
+                            Grazie al nostro sistema di geolocalizzazione, puoi facilmente trovare gli eventi di danza
+                            più vicini a te! Basta attivare la funzione di localizzazione (pagina Eventi, pulsante
+                            "Geolocalizzazione" di fianco alla ricerca) per visualizzare le opportunità nella tua zona.
+                            In alternativa, puoi esplorare il nostro catalogo eventi, sfogliando le varie proposte per
+                            trovare quelle che più ti interessano, indipendentemente dalla tua posizione. Che tu stia
+                            cercando una lezione, un workshop o una serata danzante, il nostro sistema ti aiuta a
+                            individuare l'evento perfetto per te!
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="faqBallerini4-heading">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqBallerini4" aria-expanded="false" aria-controls="faqBallerini4">
+                            Come scegliere il livello del corso di ballo?
+                        </button>
+                    </h3>
+                    <div id="faqBallerini4" class="accordion-collapse collapse"
+                        aria-labelledby="faqBallerini4-heading" data-bs-parent="#faqAccordionBallerini">
+                        <div class="accordion-body">
+                            <p>
+                                La scelta del livello del corso dipende dalla tua esperienza e dalle tue competenze
+                                nel
+                                ballo. Se sei alle prime armi o non hai mai frequentato corsi, ti consigliamo di
+                                iniziare dal livello <strong>Principiante</strong>, dove apprenderai le basi e i
+                                passi
+                                fondamentali.
+                            </p>
+                            <p>
+                                Se hai già esperienza e conosci le tecniche di base, puoi optare per un corso
+                                <strong>Intermedio</strong>, che approfondisce le figure e introduce nuove
+                                combinazioni.
+                            </p>
+                            <p>
+                                Il livello <strong>Avanzato</strong> è pensato per chi balla da tempo e desidera
+                                perfezionare lo stile, la tecnica e affrontare coreografie più complesse. In caso di
+                                dubbi, puoi sempre chiedere consiglio agli insegnanti o agli organizzatori del
+                                corso.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="faqBallerini5-heading">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqBallerini5" aria-expanded="false" aria-controls="faqBallerini5">
+                            Quali scarpe o attrezzature sono consigliate per ballare?
+                        </button>
+                    </h3>
+                    <div id="faqBallerini5" class="accordion-collapse collapse"
+                        aria-labelledby="faqBallerini5-heading" data-bs-parent="#faqAccordionBallerini">
+                        <div class="accordion-body">
+                            <p>
+                                La scelta delle scarpe da ballo e dell'attrezzatura giusta è fondamentale per
+                                praticare
+                                in sicurezza e con comfort. In generale, si consiglia di utilizzare scarpe
+                                specifiche
+                                per il tipo di danza che si intende praticare: ad esempio, scarpe con suola in cuoio
+                                per
+                                balli da sala, scarpe da ginnastica leggere per hip hop o sneakers per danze
+                                moderne. È
+                                importante che le scarpe siano comode, offrano un buon supporto e permettano libertà
+                                di
+                                movimento.
+                            </p>
+                            <p>
+                                Per quanto riguarda l'abbigliamento, si suggerisce di indossare vestiti che non
+                                limitino
+                                i movimenti e che siano adatti all'attività fisica. Alcuni corsi possono richiedere
+                                attrezzature particolari (come ginocchiere, body o accessori specifici).
+                            </p>
+                            <p>
+                                In ogni caso, le scuole di ballo e gli organizzatori degli eventi forniscono tutte
+                                le
+                                informazioni necessarie sulle attrezzature consigliate o obbligatorie prima
+                                dell'inizio
+                                delle lezioni o degli eventi. Ti invitiamo a consultare le indicazioni fornite o a
+                                chiedere direttamente agli insegnanti per essere sicuro di avere tutto il
+                                necessario.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="faqBallerini6-heading">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqBallerini6" aria-expanded="false" aria-controls="faqBallerini6">
+                            Quali categorie posso usare per cercare i corsi?
+                        </button>
+                    </h3>
+                    <div id="faqBallerini6" class="accordion-collapse collapse"
+                        aria-labelledby="faqBallerini6-heading" data-bs-parent="#faqAccordionBallerini">
+                        <div class="accordion-body">
+                            Puoi filtrare i corsi di ballo secondo le <strong>macrocategorie</strong> disponibili.
+                            Seleziona quella che rispecchia lo stile che ti interessa:
+
+                            <ul class="mt-3">
+                                <li><strong>Urban</strong> - Stili moderni e dinamici come Hip-Hop, Breakdance,
+                                    K-Pop
+                                </li>
+                                <li><strong>Latino & Caraibico</strong> - Salsa, Bachata, Merengue e altri balli
+                                    calienti</li>
+                                <li><strong>Classico & Moderno</strong> - Danza classica, contemporanea e stili
+                                    teatrali
+                                </li>
+                                <li><strong>Coreografico</strong> - Corsi incentrati su esibizioni e performance di
+                                    gruppo</li>
+                                <li><strong>Social & Swing</strong> - Balli di coppia come Tango Argentino, Lindy
+                                    Hop,
+                                    West Coast Swing</li>
+                                <li><strong>Gruppo & Fitness</strong> - Attività di gruppo per divertirsi e tenersi
+                                    in
+                                    forma (Zumba, Balli Fitness)</li>
+                                <li><strong>Danze Orientali & Etniche</strong> - Danze dal mondo: Bollywood, Afro,
+                                    Danze
+                                    Orientali</li>
+                                <li><strong>Folklore & Tradizione</strong> - Danze popolari italiane e tradizionali
+                                    internazionali</li>
+                                <li><strong>Teatrale & Performativo</strong> - Stili scenici: Teatro Danza, Vogue,
+                                    Commercial Dance</li>
+                                <li><strong>Acrobatico & Espressivo</strong> - Stili che uniscono tecnica, corpo e
+                                    creatività (Pole Dance, Body Percussion)</li>
+                            </ul>
+
+                            Puoi selezionare una delle precedenti categorie nella tua ricerca, oppure esplorare
+                            tutti i corsi
+                            disponibili senza filtri.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header" id="faqBallerini7-heading">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faqBallerini7" aria-expanded="false" aria-controls="faqBallerini7">
+                            Come posso contattare le scuole o gli insegnanti?
+                        </button>
+                    </h3>
+                    <div id="faqBallerini7" class="accordion-collapse collapse"
+                        aria-labelledby="faqBallerini7-heading" data-bs-parent="#faqAccordionBallerini">
+                        <div class="accordion-body">
+                            Puoi contattare le scuole o gli insegnanti tramite i recapiti forniti nella loro pagina
+                            specifica. Troverai email, e recapiti telefonici e altri canali di comunicazione per
+                            comunicare direttamente.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FAQ per le Scuole -->
+                <h2 class="mb-3 mt-5">FAQ per le Scuole</h2>
+                <div class="accordion mb-4" id="faqAccordionScuole">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="faqScuole1-heading">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqScuole1" aria-expanded="true" aria-controls="faqScuole1">
+                                Come posso iscrivere la mia scuola su DanceEMotion?
+                            </button>
+                        </h3>
+                        <div id="faqScuole1" class="accordion-collapse collapse show"
+                            aria-labelledby="faqScuole1-heading" data-bs-parent="#faqAccordionScuole">
+                            <div class="accordion-body">
+                                Per iscrivere la tua scuola, vai nella sezione dedicata alle scuole e segui la
+                                procedura di
+                                registrazione inserendo i dati richiesti. Una volta completata la registrazione,
+                                potrai
+                                aggiungere corsi, eventi e gestire le informazioni della tua scuola.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="faqScuole2-heading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqScuole2" aria-expanded="false" aria-controls="faqScuole2">
+                                Come posso promuovere i miei eventi sulla piattaforma?
+                            </button>
+                        </h3>
+                        <div id="faqScuole2" class="accordion-collapse collapse"
+                            aria-labelledby="faqScuole2-heading" data-bs-parent="#faqAccordionScuole">
+                            <div class="accordion-body">
+                                Dopo aver registrato la tua scuola, puoi aggiungere eventi tramite il pannello di
+                                gestione.
+                                Compila tutte le informazioni richieste per rendere l'evento visibile agli utenti
+                                interessati.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="faqScuole3-heading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqScuole3" aria-expanded="false" aria-controls="faqScuole3">
+                                Come gestire le iscrizioni ai corsi?
+                            </button>
+                        </h3>
+                        <div id="faqScuole3" class="accordion-collapse collapse"
+                            aria-labelledby="faqScuole3-heading" data-bs-parent="#faqAccordionScuole">
+                            <div class="accordion-body">
+                                Puoi gestire le iscrizioni ai corsi direttamente dal tuo pannello di controllo,
+                                visualizzando gli iscritti e comunicando con loro tramite la piattaforma.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="faqScuole4-heading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqScuole4" aria-expanded="false" aria-controls="faqScuole4">
+                                Quali categorie di corso posso selezionare?
+                            </button>
+                        </h3>
+                        <div id="faqScuole4" class="accordion-collapse collapse"
+                            aria-labelledby="faqScuole4-heading" data-bs-parent="#faqAccordionScuole">
+                            <div class="accordion-body">
+                                Le categorie di corso rappresentano le <strong>macrocategorie di ballo</strong> che
+                                aiutano
+                                gli
+                                utenti a filtrare e trovare rapidamente corsi di loro interesse. Ogni scuola può
+                                assegnare
+                                una
+                                categoria a ciascun corso in base allo stile predominante. Di seguito trovi l'elenco
+                                delle
+                                opzioni disponibili:
+
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-sm">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Valore</th>
+                                                <th>Descrizione</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Urban</td>
+                                                <td>Stili urbani: Hip-Hop, Breakdance, House, Waacking, K-Pop</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Latino & Caraibico</td>
+                                                <td>Salsa, Bachata, Merengue, Dancehall, Latin Hustle</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Classico & Moderno</td>
+                                                <td>Danza Classica, Moderna, Contemporanea, Jazz, Lyrical</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Coreografico</td>
+                                                <td>Corsi con focus su coreografie strutturate e di gruppo</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Social & Swing</td>
+                                                <td>Balli sociali e swing: Tango Argentino, West Coast Swing, Lindy
+                                                    Hop</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Gruppo & Fitness</td>
+                                                <td>Zumba, Balli Fitness, Balli di Gruppo</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Danze Orientali & Etniche</td>
+                                                <td>Bollywood, Danze Orientali, Afro, danze etniche</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Folklore & Tradizione</td>
+                                                <td>Danze popolari italiane e folkloristiche internazionali</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Teatrale & Performativo</td>
+                                                <td>Teatro Danza, Vogue, Commercial Dance, Improvvisazione</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Acrobatico & Espressivo</td>
+                                                <td>Pole Dance, Heels Dance, Body Percussion</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                Se il tuo corso si presta a più stili, puoi selezionare la categoria che meglio lo
+                                rappresenta.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- FAQ Consigli Generali -->
+                <h2 class="mb-3 mt-5">Consigli Generali</h2>
+                <div class="accordion" id="faqAccordionGenerali">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="faqGenerali1-heading">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqGenerali1" aria-expanded="true" aria-controls="faqGenerali1">
+                                Chi posso contattare per assistenza?
+                            </button>
+                        </h3>
+                        <div id="faqGenerali1" class="accordion-collapse collapse show"
+                            aria-labelledby="faqGenerali1-heading" data-bs-parent="#faqAccordionGenerali">
+                            <div class="accordion-body">
+                                <p>
+                                    Per assistenza, puoi contattare il nostro supporto tramite la pagina
+                                    "Contattaci". Per
+                                    qualsiasi domanda o richiesta di assistenza, il nostro team è sempre pronto ad
+                                    aiutarti.
+                                    Non esitare a contattarci per ricevere supporto o chiarimenti su qualsiasi aspetto della
+                                    piattaforma.
+                                </p>
+                                <p>
+                                    Se hai domande specifiche riguardo a corsi o eventi, ti consigliamo di contattare
+                                    direttamente gli organizzatori o le scuole di ballo coinvolte. DanceEMotion funge da
+                                    piattaforma di collegamento, ma non gestisce direttamente le comunicazioni tra
+                                    utenti e
+                                    organizzatori.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h3 class="accordion-header" id="faqGenerali2-heading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faqGenerali2" aria-expanded="false" aria-controls="faqGenerali2">
+                                Come pagare i corsi e l'accesso agli eventi?
+                            </button>
+                        </h3>
+                        <div id="faqGenerali2" class="accordion-collapse collapse"
+                            aria-labelledby="faqGenerali2-heading" data-bs-parent="#faqAccordionGenerali">
+                            <div class="accordion-body">
+                                <p>
+                                    DanceEMotion non gestisce direttamente i pagamenti. Il pagamento dei corsi deve
+                                    essere
+                                    effettuato secondo le modalità indicate dagli organizzatori degli eventi o dalle
+                                    scuole
+                                    di ballo. Puoi visualizzare il prezzo stabilito per ogni corso nella relativa
+                                    scheda
+                                    informativa. Per dettagli su come effettuare il pagamento (ad esempio bonifico,
+                                    contanti
+                                    o altre modalità), ti consigliamo di contattare direttamente l'organizzatore o
+                                    la
+                                    scuola.
+                                </p>
+                                <p>
+                                    DanceEMotion non eroga pagamenti né gestisce transazioni economiche. Il
+                                    pagamento di
+                                    eventi e corsi è di esclusiva competenza degli organizzatori degli eventi e
+                                    delle scuole
+                                    di ballo.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </main>
+    <!-- Fine FAQ -->
+
+    <!-- Footer -->
+    <%- include('components/footer'); %>
+    <!-- Fine footer -->
+</body>
+
+</html>

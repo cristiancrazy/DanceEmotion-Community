@@ -1,0 +1,556 @@
+<!-- 
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: User profile dashboard page for DanceEMotion platform.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • Profilo Utente◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <!-- Custom JS scripts -->
+    <script src="/javascripts/calendar.js"></script>
+    <script src="/javascripts/profilo-utente.js" defer></script>
+</head>
+
+<body class="bg-white">
+    <!-- Navbar principale -->
+    <%- include('../components/header'); %>
+    <!-- Fine Navbar principale-->
+
+    <div class="container mt-4 mb-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <aside class="col-12 col-xl-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <!-- Profilo utente -->
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="<%= (user.ImmagineProfilo)? user.ImmagineProfilo : '/images/logo-black.png' %>" alt="Foto Profilo" class="rounded-circle me-3"
+                                width="70" height="70">
+                            <div>
+                                <h4 class="mb-0">
+                                    <%= user.Nome + ' ' + user.Cognome %>
+                                </h4>
+                                <small class="text-muted d-none d-xl-block"><%= user.Email %></small>
+                            </div>
+                        </div>
+                        <hr>
+                        <h5>Informazioni personali</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li><strong>Data di nascita:</strong> <%= new Date(user.DataNascita).toLocaleDateString('it-IT') %></li>
+                            <li><strong>Telefono:</strong> <%= user.Telefono %></li>
+                        </ul>
+                        <div class="d-grid">
+                            <!-- Modify profile -->
+                            <button class="btn btn-outline-primary mt-3" type="button"
+                                data-bs-toggle="modal" data-bs-target="#modalModificaUtente">
+                                <i class="bi bi-pencil-square me-2"></i> Modifica Profilo
+                            </button>
+                            <!-- Modify profile photo -->
+                            <button class="btn btn-outline-warning mt-2" type="button"
+                                data-bs-toggle="modal" data-bs-target="#modalModificaFotoProfilo">
+                                <i class="bi bi-camera me-2"></i> Modifica Foto Profilo
+                            </button>
+                            <!-- Elimina profilo -->
+                            <form action="/profilo/elimina-ballerino" method="POST" class="mt-2">
+                                <input type="hidden" name="IDBallerino" value="<%= user.IDBallerino %>">
+                                <button type="submit" class="btn btn-outline-danger w-100">
+                                    <i class="bi bi-trash me-2"></i> Elimina Profilo
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Scuole preferite -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center">
+                            <i class="bi bi-star-fill text-warning me-2"></i>Scuole preferite
+                        </h5>
+                        <ul class="list-group list-group-flush">
+                            <% if(!preferred || preferred?.length === 0) { %>
+                                <li class="list-group-item text-center">
+                                    <i class="bi bi-exclamation-circle text-muted"></i> Nessuna scuola preferita
+                                </li>
+                            <% } else { %>
+                            <% preferred.forEach(school => { %>
+                                <a href="/scuola-spec/<%= school.IDScuola %>/" class="text-decoration-none">
+                                    <li class="hover-effect-reverse list-group-item d-flex align-items-center border-0">
+                                        <img src="<%= (school.ImmagineProfilo)? school.ImmagineProfilo : '/images/logo-black.png' %>" alt="Logo Scuola" class="rounded-circle me-3"
+                                            width="50" height="50">
+                                        <div>
+                                            <h6 class="mb-0"><%= school.Nome %></h6>
+                                        </div>
+                                    <span class="ms-auto text-muted small"><%= school.Citta %></span>
+                                </li>
+                                </a>
+                            <% })} %>
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+            <!-- Fine Sidebar -->
+
+            <!-- Contenuto principale -->
+            <main class="col-12 col-xl-9">
+                <!-- Notify area -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center">
+                            <i class="bi bi-bell-fill me-2"></i>Notifiche
+                        </h5>
+                        <% if(!notification || notification?.length === 0) { %>
+                        <div class="text-center text-muted">
+                            <i class="bi bi-exclamation-circle"></i> Nessuna notifica
+                        </div>
+                        <% } else { %>
+                        <ul class="list-group list-group-flush">
+                            <% notification.forEach(notif => { %>
+                            <li class="hover-effect-reverse list-group-item d-flex align-items-center">
+                                <% if (notif.Tipo === 'Evento') { %>
+                                <i class="bi bi-calendar-event-fill text-success me-2"></i>
+                                <% } else if (notif.Tipo === 'Corso') { %>
+                                <i class="bi bi-journal-text text-primary me-2"></i>
+                                <% } else if (notif.Tipo === 'Risposta') { %>
+                                <i class="bi bi-chat-left-dots-fill text-secondary me-2"></i>
+                                <% } else { %>
+                                <i class="bi bi-newspaper text-info me-2"></i>
+                                <% } %>
+                                <span class="fw-bold me-2"><%= notif.NomeScuola %></span>
+                                <%= notif.Messaggio %>
+                                <span class="ms-auto text-muted small"><%= new Date(notif.DataInvio).toLocaleString('it-IT', {day: 'numeric', month: 'numeric', year: 'numeric'}) %></span>
+                            </li>
+                            <% }); %>
+                        </ul>
+                        <% } %>
+                    </div>
+                </div>
+                <!-- Fine Notify area -->
+
+                <!-- Calendar area -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center">
+                            <i class="bi bi-calendar-fill me-2"></i>Calendario Corsi
+                        </h5>
+                    </div>
+                    <!-- Current Month and Buttons (gathered together) -->
+                    <div class="d-flex justify-content-between align-items-center p-2">
+                        <button class="btn btn-outline-secondary" id="prev-month"><i
+                                class="bi bi-chevron-left"></i></button>
+                        <h6 id="current-month" class="text-center mb-0"></h6>
+                        <button class="btn btn-outline-secondary" id="next-month"><i
+                                class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div id="calendar" class="table-responsive p-2">
+                        <table class="table table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Lunedì</th>
+                                    <th>Martedì</th>
+                                    <th>Mercoledì</th>
+                                    <th>Giovedì</th>
+                                    <th>Venerdì</th>
+                                    <th>Sabato</th>
+                                    <th>Domenica</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-body">
+                                <!-- Calendar days will be dynamically generated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Fine Calendar area-->
+
+                <!-- Course history -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center">
+                            <i class="bi bi-journal-text me-2"></i>Storico corsi
+                        </h5>
+                        <% if(!bookedCourses || bookedCourses?.length === 0) { %>
+                        <div class="text-center text-muted">
+                            <i class="bi bi-exclamation-circle"></i> Nessun corso prenotato
+                        </div>
+                        <% } else { %>
+                        <ul class="list-group list-group-flush">
+                            <% bookedCourses.forEach(course => { %>
+                            <li class="hover-effect-reverse list-group-item d-flex align-items-center">
+                                <img src="/images/logo-black.png" alt="Logo Corso" class="rounded-circle me-3"
+                                    width="50" height="50">
+                                <div>
+                                    <h6 class="mb-0"><%= course.Nome %></h6>
+                                    <small class="text-muted"><%= course.NomeScuola %></small><br>
+                                    <% if (course.Tipologia === 'Periodica') { %>
+                                    <span class="badge bg-primary">Frequenza periodica</span>
+                                    <% } else if (course.Tipologia === 'Singola') { %>
+                                    <span class="badge bg-secondary">Lezione singola</span>
+                                    <% } else if (course.Tipologia === 'Privata') { %>
+                                    <span class="badge bg-success">Lezione privata</span>
+                                    <% } %>
+                                    <% if (course.Tipologia === 'Periodica') { %>
+                                    <span class="badge bg-info text-dark ms-1">Abbonamento</span>
+                                    <% } else { %>
+                                    <span class="badge bg-warning text-dark ms-1">Pagamento Singolo</span>
+                                    <% } %>
+                                    <% if (course.Tipologia === 'Periodica') { %>
+                                    <div class="small text-muted mt-1">
+                                        <i class="bi bi-clock"></i> Di <%= new Date(course.DataInizio).toLocaleDateString('it-IT', { weekday: 'long' }); %> dalle <%= course.OrarioInizio %> alle <%= course.OrarioFine %>
+                                    </div>
+                                    <div class="small text-muted mt-1">
+                                        <i class="bi bi-calendar-event"></i> Dal <%= new Date(course.DataInizio).toLocaleDateString('it-IT') %>
+                                    </div>
+                                    <% } else { %>
+                                    <div class="small text-muted mt-1">
+                                        <% if (!course.DataInizio) { %>
+                                        <i class="bi bi-calendar-event"></i> Prenotazione privata
+                                        <% } else { %>
+                                        <i class="bi bi-calendar-event"></i> <%= new Date(course.DataInizio).toLocaleDateString('it-IT') %>, dalle <%= course.OrarioInizio %> alle <%= course.OrarioFine %>
+                                        <% } %>
+                                    </div>
+                                    <% } %>
+                                    <% if (course.Tipologia === 'Periodica') { %>
+                                    <div class="small text-muted mt-1">
+                                        <i class="bi bi-cash-stack"></i> € <%= course.Prezzo*4 %>/mese
+                                    </div>
+                                    <% } else if (course.Tipologia === 'Privata') { %>
+                                        <div class="small text-muted mt-1">
+                                            <i class="bi bi-cash-stack"></i> € <%= course.Prezzo %>/ora
+                                        </div>
+                                    <% } else { %>
+                                        <div class="small text-muted mt-1">
+                                            <i class="bi bi-cash-stack"></i> € <%= course.Prezzo %>
+                                        </div>
+                                    <% } %>
+                                    <% if (course.Tipologia === 'Periodica') { %>
+                                    <div class="small text-muted mt-1">
+                                        <i class="bi bi-calendar-check"></i> Fine corso: <%= new Date(course.DataFine).toLocaleDateString('it-IT') %>
+                                    </div>
+                                    <% } %>
+                                </div>
+                                <span class="ms-auto text-muted small">Iscrizione <%= course.Stato %></span>
+                                <% if (course.Stato === 'Accettata' || course.Stato === 'Terminata') { %>
+                                <button type="button" class="btn btn-outline-secondary btn-sm ms-2"
+                                    title="Materiali del corso" data-course-attachment-id="<%= course.IDCorso %>">
+                                    <i class="bi bi-folder"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm ms-2"
+                                    title="Lascia una recensione" data-course-id="<%= course.IDCorso %>">
+                                    <i class="bi bi-star"></i>
+                                </button>
+                                <% } %>
+                                <form method="POST" action="/profilo/elimina-iscrizione" id="form-disiscrizione-<%= course.IDIscrizione %>">
+                                    <input type="hidden" name="IDIscrizione" value="<%= course.IDIscrizione %>">
+                                </form>
+                                <button type="submit" form="form-disiscrizione-<%= course.IDIscrizione %>" class="btn btn-outline-danger btn-sm ms-2"
+                                    title="Disiscriviti dal corso">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                            </li>
+                            <% }); %>
+                        </ul>
+                        <% } %>
+                    </div>
+                </div>
+                <!-- Fine Course history -->
+                <!-- Events history -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center">
+                            <i class="bi bi-calendar-check-fill me-2"></i>Storico eventi
+                        </h5>
+                        <% if(!bookedEvents || bookedEvents?.length === 0) { %>
+                        <div class="text-center text-muted">
+                            <i class="bi bi-exclamation-circle"></i> Nessun evento prenotato
+                        </div>
+                        <% } else { %>
+                        <ul class="list-group list-group-flush">
+                            <% bookedEvents.forEach(event => { %>
+                            <li class="hover-effect-reverse list-group-item d-flex align-items-center">
+                                <img src="/images/logo-black.png" alt="Logo Evento" class="rounded-circle me-3"
+                                    width="50" height="50">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0"><%= event.Nome %></h6>
+                                    <small class="text-muted"><%= event.NomeScuola %></small><br>
+                                    <span class="small text-muted"><i class="bi bi-calendar-event"></i> <%= new Date(event.DataOra).toLocaleDateString('it-IT') %>,
+                                        alle <%= new Date(event.DataOra).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) %></span><br>
+                                    <span class="small text-muted"><i class="bi bi-geo-alt"></i> <%= event.Luogo %></span><br>
+                                    <% if (event.Prezzo === 0) { %>
+                                    <span class="badge bg-success">Gratuito</span>
+                                    <% } else { %>
+                                        <span class="badge bg-danger">Pagamento</span>
+                                        <span class="ms-1 small text-muted">€<%= event.Prezzo %></span>
+                                    <% } %>
+                                </div>
+                                <% if ((new Date(event.DataOra) > new Date()) || (event.Stato != 'Terminato')) { %>
+                                <span class="ms-2 text-muted small">Partecipazione <%= event.Stato %></span>
+                                <% } else { %>
+                                <span class="ms-2 text-muted small">Terminato</span>
+                                <% } %>
+                                <button type="button" class="btn btn-outline-secondary btn-sm ms-2" data-event-poster="<%= (event.Locandina)? event.Locandina : '/images/logo-black.png' %>"
+                                    title="Dettagli evento">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                                <% if (event.Stato != 'Terminata') { %>
+                                    <form method="POST" action="/profilo/elimina-prenotazione" id="form-disiscrizione-evento-<%= event.IDPrenotazione %>">
+                                        <input type="hidden" name="IDPrenotazione" value="<%= event.IDPrenotazione %>">
+                                    </form>
+                                    <button type="submit" form="form-disiscrizione-evento-<%= event.IDPrenotazione %>" class="btn btn-outline-danger btn-sm ms-2"
+                                        title="Disiscriviti dall'evento">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                <% } %>
+                            </li>
+                            <% }) %>
+                        </ul>
+                        <% } %>
+                    </div>
+                </div>
+                <!-- Fine Events history -->
+            </main>
+            <!-- Fine Contenuto principale -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include('../components/footer'); %>
+    <!-- Fine Footer -->
+
+    <% if (success) { %>
+    <!-- Toast for successful flash messages -->
+    <% success.forEach(function(message) { %>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Successo</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <%= message %>
+            </div>
+        </div>
+    </div>
+    <% });} %>
+
+    <% if (error) { %>
+        <% error.forEach(function(message) { %>
+            <!-- Toast for error flash messages -->
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto text-danger">Errore</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <%= message %>
+                    </div>
+                </div>
+            </div>
+    <% });} %>
+
+
+    <% console.log(attachments) %>
+    <!-- Modal Course Materials -->
+    <div class="modal fade" id="materialiCorsoModal" tabindex="-1" aria-labelledby="materialiCorsoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="materialiCorsoModalLabel"><i class="bi bi-folder me-2"></i>Materiali
+                        del corso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Course Materials -->
+
+    <script type="application/json" id="attachmentsData"><%- JSON.stringify(attachments) %></script>
+    
+
+    <!-- Modal Review -->
+    <div class="modal fade" id="recensioneModal" tabindex="-1" aria-labelledby="recensioneModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recensioneModalLabel"><i class="bi bi-star me-2"></i>Lascia una
+                        recensione</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recensioneForm" method="POST" action="/profilo/nuova-recensione">
+                        <input type="hidden" name="IDCorso" id="IDCorsoRecensione" value="">
+                        <div class="mb-3">
+                            <label for="recensione" class="form-label">Scrivi la tua recensione</label>
+                            <textarea name="Corpo" class="form-control" id="recensione" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="valutazione" class="form-label">Valutazione</label>
+                            <select name="Valutazione" class="form-select" id="valutazione">
+                                <option value="1">1 Stella</option>
+                                <option value="2">2 Stelle</option>
+                                <option value="3">3 Stelle</option>
+                                <option value="4">4 Stelle</option>
+                                <option value="5">5 Stelle</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="submit" form="recensioneForm" class="btn btn-primary" id="inviaRecensioneBtn">Invia</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Review -->
+
+    <!-- Modal Event Poster -->
+    <div class="modal fade" id="locandinaEventoModal" tabindex="-1" aria-labelledby="locandinaEventoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="locandinaEventoModalLabel"><i class="bi bi-image me-2"></i>Locandina
+                        Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="locandinaEventoImg" alt="Locandina Evento" class="img-fluid rounded shadow">
+                </div>
+                <div class="modal-footer">
+                    <a id="locandinaEventoLink" target="_blank" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-up-right"></i> Apri in nuova scheda
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Event Poster -->
+    
+    <!-- Modal per la modifica delle informazioni dell'utente -->
+    <div class="modal fade" id="modalModificaUtente" tabindex="-1" aria-labelledby="modalModificaUtenteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalModificaUtenteLabel">
+                        <i class="bi bi-pencil-square me-2 fs-3"></i>
+                        Modifica Informazioni Utente
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-4">
+                    <form id="modificaUtenteForm" method="POST" action="/profilo/modifica-ballerino">
+                        <div class="mb-3">
+                            <label for="nomeUtente" class="form-label">Nome</label>
+                            <input type="text" class="form-control" name="nome" id="nomeUtente" placeholder="Inserisci il tuo nome" value="<%= user.Nome %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cognomeUtente" class="form-label">Cognome</label>
+                            <input type="text" class="form-control" name="cognome" id="cognomeUtente" placeholder="Inserisci il tuo cognome" value="<%= user.Cognome %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailUtente" class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="emailUtente" placeholder="Inserisci la tua email" value="<%= user.Email %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dataNascitaUtente" class="form-label">Data di nascita</label>
+                            <input type="date" class="form-control" name="dataNascita" id="dataNascitaUtente" value="<%= user.DataNascita %>" required>
+                        </div>
+                        <div class="mb-3" >
+                            <label for="telefonoUtente" class="form-label">Telefono</label>
+                            <input type="tel" class="form-control" name="telefono" id="telefonoUtente" placeholder="Inserisci il tuo numero di telefono" value="<%= user.Telefono %>" required>
+                        </div>
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="passwordUtente" class="form-label">Nuova Password</label>
+                            <input type="password" class="form-control" name="password" id="passwordUtente" placeholder="Inserisci la tua nuova password">
+                            <p class="form-text text-muted">Lascia vuoto se non vuoi modificare la password.</p>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Annulla
+                    </button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4" form="modificaUtenteForm">
+                        <i class="bi bi-save me-2"></i>Salva Modifiche
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal per la modifica delle informazioni dell'utente -->
+
+    
+    <!-- Modal Modifica foto profilo -->
+    <div class="modal fade" id="modalModificaFotoProfilo" tabindex="-1" aria-labelledby="modalModificaFotoProfiloLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalModificaFotoProfiloLabel">
+                        <i class="bi bi-image me-2 fs-3"></i>
+                        Modifica Foto Profilo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-4">
+                    <form id="modificaFotoBallerinoForm" enctype="multipart/form-data" action="/profilo/modifica-foto-ballerino" method="POST">
+                        <div class="mb-3">
+                            <label for="fotoBallerino" class="form-label">Carica Nuova Foto</label>
+                            <input type="file" class="form-control" id="fotoBallerino" name="fotoBallerino" 
+                                placeholder="Carica una nuova foto per il ballerino" accept="image/*" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Annulla
+                    </button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4" form="modificaFotoBallerinoForm">
+                        <i class="bi bi-image me-2"></i>Carica Foto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Modifica foto profilo -->
+
+    <!-- Custom JS for Calendar -->
+
+    <script type="application/json" id="calendar-data"><%- JSON.stringify(calendarCourses) %></script>
+
+    <script>
+        const data = JSON.parse(document.getElementById('calendar-data').textContent);
+        let calendar = new Calendar();
+        calendar.addActivityJSON(data);
+    </script>
+</body>
+
+</html>

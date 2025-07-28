@@ -1,0 +1,80 @@
+<!--
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: This contact page allows users to send messages to the DanceEMotion team.
+    It handles the submission and prepares an email with the provided information.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • Contattaci◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <!-- Custom JS -->
+    <script src="/javascripts/contattaci.js" defer></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <%- include('components/header'); %>
+    <!-- Fine navbar -->
+
+    <!-- Contenuto principale -->
+    <main class="container my-5 vh-100">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <h2 class="mb-4 text-center">Contattaci</h2>
+                <form id="contactForm">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="nome" placeholder="Inserisci il tuo nome" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Inserisci la tua email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="oggetto" class="form-label">Oggetto</label>
+                        <select class="form-select" id="oggetto" name="oggetto" required>
+                            <option value="" disabled selected>Seleziona un oggetto</option>
+                            <option value="Informazioni generali">Informazioni generali</option>
+                            <option value="Problemi tecnici con la piattaforma">Problemi tecnici con la piattaforma</option>
+                            <option value="Altro">Altro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="altroOggettoDiv" style="display: none;">
+                        <label for="altroOggetto" class="form-label">Specifica oggetto</label>
+                        <input type="text" class="form-control" id="altroOggetto" name="altroOggetto" placeholder="Inserisci l'oggetto">
+                    </div>
+                    <div class="mb-3">
+                        <label for="messaggio" class="form-label">Messaggio</label>
+                        <textarea class="form-control" id="messaggio" name="messaggio" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Invia</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <!-- Fine contenuto principale -->
+
+    <!-- Footer -->
+    <%- include('components/footer'); %>
+    <!-- Fine footer -->
+
+</body>
+
+</html>

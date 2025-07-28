@@ -1,0 +1,13 @@
+body {
+    background-image: url("/images/logo-accesso.png");
+    background-repeat: no-repeat;
+    background-size: cover; /* Adjust this value to control the size of the image */
+
+    background-position: center;
+    background-attachment: fixed;
+    background-color: #f0f0f0; /* Fallback color */
+}
+
+#main-alert {
+    opacity: 0.94;
+}

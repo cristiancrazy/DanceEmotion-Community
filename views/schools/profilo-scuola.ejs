@@ -1,0 +1,1517 @@
+<!-- 
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: School dashboard page for DanceEMotion platform.
+-->
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • Profilo Scuola◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <!-- Custom JS scripts -->
+    <script src="/javascripts/calendar.js"></script>
+    <script src="/javascripts/profilo-scuola.js" defer></script>
+</head>
+
+<body class="bg-white">
+    <!-- Navbar principale -->
+    <%- include('../components/header'); %>
+    <!-- Fine Navbar principale -->
+
+    <div class="container mt-4 mb-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <aside class="col-12 col-xl-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <!-- Profilo scuola -->
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="<%= (user.ImmagineProfilo) ? user.ImmagineProfilo : '/images/logo-black.png' %>" alt="Foto Profilo" class="rounded-circle me-3"
+                                width="70" height="70">
+                            <div>
+                                <h4 class="mb-0"><%= user.Nome %></h4>
+                            </div>
+                        </div>
+                        <hr>
+                        <h5>Informazioni di contatto</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <i class="bi bi-geo-alt me-2"></i>
+                                <strong>Indirizzo:</strong>
+                                <%= user.Indirizzo + ', ' + user.Citta + ' (' + user.CAP + ')' + ' - ' + user.Regione %>
+                            </li>
+                            <li>
+                                <i class="bi bi-telephone me-2"></i>
+                                <strong>Telefono:</strong> <%= user.Telefono %>
+                            </li>
+                        </ul>
+                        <div class="d-grid">
+                            <button class="btn btn-outline-primary mt-3" type="button" data-bs-toggle="modal"
+                                data-bs-target="#modalModificaScuola">
+                                <i class="bi bi-pencil-square me-2"></i> Modifica Profilo
+                            </button>
+                            <!-- Modifica foto profilo scuola -->
+                            <button class="btn btn-outline-secondary mt-2" type="button" data-bs-toggle="modal"
+                                data-bs-target="#modalModificaFotoProfilo">
+                                <i class="bi bi-image me-2"></i> Modifica Foto Profilo
+                            </button>
+                            <!-- Elimina profilo -->
+                            <form action="/profilo/elimina-scuola" method="POST" class="mt-2">
+                                <input type="hidden" name="IDScuola" value="<%= user.IDScuola %>">
+                                <button type="submit" class="btn btn-outline-danger w-100">
+                                    <i class="bi bi-trash me-2"></i> Elimina Profilo
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            <!-- Fine Sidebar -->
+
+            <!-- Contenuto principale -->
+            <main class="col-12 col-xl-9">
+                <!-- Management School Section -->
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center mb-3">
+                            <i class="bi bi-gear-fill me-2"></i> Gestione Scuola
+                        </h5>
+                        <div class="row">
+                            <!-- Modifica Descrizione Scuola -->
+                            <div class="hover-effect-reverse col-12 col-md-4">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                        <i class="bi bi-info-circle display-4 text-warning mb-3"></i>
+                                        <h5 class="card-title mb-2">Modifica Descrizione</h5>
+                                        <p class="card-text text-center mb-3">Aggiorna la descrizione e le informazioni
+                                            della tua scuola di ballo.</p>
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#modalModificaDescrizione" class="btn btn-warning w-100">
+                                            <i class="bi bi-pencil-square me-2"></i> Modifica Descrizione
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Aggiungi Corso -->
+                            <div class="hover-effect-reverse col-12 col-md-4 mb-3 mb-md-0">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                        <i class="bi bi-plus-circle display-4 text-success mb-3"></i>
+                                        <h5 class="card-title mb-2">Aggiungi Corso</h5>
+                                        <p class="card-text text-center mb-3">Crea un nuovo corso per la tua scuola e
+                                            gestisci le iscrizioni degli studenti.</p>
+                                        <button type="button" class="btn btn-success w-100 mb-2" data-bs-toggle="modal"
+                                            data-bs-target="#modalAggiungiCorso">
+                                            <i class="bi bi-plus-circle me-2"></i> Aggiungi Corso
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary w-100 mb-2"
+                                            data-bs-toggle="modal" data-bs-target="#modalSelezionaModificaCorso">
+                                            <i class="bi bi-pencil me-2"></i> Modifica Corso
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger w-100"
+                                            data-bs-toggle="modal" data-bs-target="#modalEliminaCorsoLista">
+                                            <i class="bi bi-trash me-2"></i> Elimina Corso
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Aggiungi Evento -->
+                            <div class="hover-effect-reverse col-12 col-md-4 mb-3 mb-md-0">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                                        <i class="bi bi-calendar-plus display-4 text-primary mb-3"></i>
+                                        <h5 class="card-title mb-2">Aggiungi Evento</h5>
+                                        <p class="card-text text-center mb-3">Organizza un nuovo evento pubblico o
+                                            privato per la tua scuola di danza.</p>
+                                        <button type="button" class="btn btn-primary w-100 mb-2" data-bs-toggle="modal"
+                                            data-bs-target="#modalAggiungiEvento">
+                                            <i class="bi bi-calendar-plus me-2"></i> Aggiungi Evento
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary w-100 mb-2"
+                                            data-bs-toggle="modal" data-bs-target="#modalModificaEvento">
+                                            <i class="bi bi-pencil me-2"></i> Modifica Evento
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger w-100"
+                                            data-bs-toggle="modal" data-bs-target="#modalEliminaEvento">
+                                            <i class="bi bi-trash me-2"></i> Elimina Evento
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fine Management School Section -->
+
+                <!-- Gestione Iscritti ai Corsi -->
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center mb-3">
+                            <i class="bi bi-people-fill me-2"></i> Gestione Iscritti ai Corsi
+                        </h5>
+                        <!-- Filtro per corso -->
+                        <form class="mb-3">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-auto">
+                                    <label for="filtro-corso" class="col-form-label">Filtra per corso:</label>
+                                </div>
+                                <div class="col-auto">
+                                    <select id="filtro-corso" class="form-select">
+                                        <option value="tutti">Tutti i corsi</option>
+                                        <% if (bookedCoursesDetails && bookedCoursesDetails.length > 0) { %>
+                                            <% bookedCoursesDetails.filter((item, index, self) => self.findIndex(i => i.NomeCorso === item.NomeCorso) === index).forEach(course => { %>
+                                                <option value="<%= course.NomeCorso %>">
+                                                    <%= course.NomeCorso %>
+                                                </option>
+                                            <% }); %>
+                                        <% } %>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    Numero di iscritti: <span id="numero-iscritti">0</span>
+                                </div>
+                            </div>
+                        </form>
+                        <% if (bookedCoursesDetails && bookedCoursesDetails.length === 0) { %>
+                            <div class="alert alert-info" role="alert">
+                                Nessun iscritto ai corsi al momento.
+                            </div>
+                        <% } else {%>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle" id="tabella-iscritti">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Corso</th>
+                                        <th>Ballerino/a</th>
+                                        <th>Email</th>
+                                        <th>Stato</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% bookedCoursesDetails.forEach(iscritto => { %>
+                                    <tr data-corso="<%= iscritto.NomeCorso %>">
+                                        <td><%= iscritto.NomeCorso %></td>
+                                        <td><%= iscritto.NomeBallerino + ' ' + iscritto.CognomeBallerino %></td>
+                                        <td><%= iscritto.EmailBallerino %></td>
+                                        <td>
+                                            <% if (iscritto.Stato === 'Accettata') { %>
+                                                <span class="badge bg-success">Iscritto</span>
+                                            <% } else if (iscritto.Stato === 'Richiesta') { %>
+                                                <span class="badge bg-warning text-dark">In attesa</span>
+                                            <% } else { %>
+                                                <span class="badge bg-secondary"><%= iscritto.Stato %></span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (iscritto.Stato === 'Richiesta') { %>
+                                                <form method="POST" action="/profilo/aggiorna-stato-iscrizione" id="form-mgmt-course-accept-<%= iscritto.IDIscrizione %>">
+                                                    <input type="hidden" name="IDIscrizione" value="<%= iscritto.IDIscrizione %>">
+                                                    <input type="hidden" name="Stato" value="Accettata">
+                                                </form>
+                                                <button type="submit" form="form-mgmt-course-accept-<%= iscritto.IDIscrizione %>" class="btn btn-outline-success btn-sm" title="Approva Iscrizione">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </button>
+                                                <form method="POST" action="/profilo/aggiorna-stato-iscrizione" id="form-mgmt-course-reject-<%= iscritto.IDIscrizione %>">
+                                                    <input type="hidden" name="IDIscrizione" value="<%= iscritto.IDIscrizione %>">
+                                                    <input type="hidden" name="Stato" value="Rifiutata">
+                                                </form>
+                                                <button type="submit" form="form-mgmt-course-reject-<%= iscritto.IDIscrizione %>" class="btn btn-outline-danger btn-sm" title="Rifiuta Iscrizione">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </button>
+                                            <% } else { %>
+                                                <button class="btn btn-outline-secondary btn-sm" disabled
+                                                    title="Iscrizione già gestita">
+                                                    <i class="bi bi-check2-circle"></i>
+                                                </button>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <script>
+                    
+                </script>
+                <!-- Fine Gestione Iscritti ai Corsi -->
+
+                <!-- Gestione file allegati ai corsi -->
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center mb-3">
+                            <i class="bi bi-file-earmark-text-fill me-2"></i> Gestione File Allegati ai Corsi
+                        </h5>
+                        <!-- Filtro per corso -->
+                        <form class="mb-3">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-auto">
+                                    <label for="filtro-corso-file" class="col-form-label">Seleziona il corso:</label>
+                                </div>
+                                <div class="col-auto">
+                                    <select id="filtro-corso-file" class="form-select">
+                                        <option value="tutti">Tutti i corsi</option>
+                                        <% if (courses && courses.length > 0) { %>
+                                            <% courses.filter((item, index, self) => self.findIndex(i => i.Nome === item.Nome) === index).forEach(course => { %>
+                                                <option value="<%= course.Nome %>" data-id-corso="<%= course.IDCorso %>">
+                                                    <%= course.Nome %>
+                                                </option>
+                                            <% }); %>
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- Table -->
+                        <% if (!attachments || attachments.length === 0) { %>
+                            <div class="alert alert-info" role="alert">
+                                Nessun file allegato ai corsi al momento.
+                            </div>
+                        <% } else { %>
+                            <table class="table table-hover align-middle" id="tabella-allegati">
+                                <thead>
+                                    <tr>
+                                        <th>Nome File</th>
+                                        <th>Corso Associato</th>
+                                        <th>Tipo File</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% console.log(attachments); attachments.forEach(attachment => { %>
+                                        <tr>
+                                            <td><%= attachment.NomeFile %></td>
+                                            <td><%= attachment.NomeCorso %></td>
+                                            <td><%= attachment.Tipologia.split('/')[0] %></td>
+                                            <td>
+                                                <a href="/profilo/download-allegato-scuola/<%= attachment.IDAllegato %>" class="btn btn-sm btn-primary">Scarica</a>
+                                                <form action="/profilo/elimina-allegato/<%= attachment.IDAllegato %>" method="POST" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Elimina</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        <% } %>
+                        <!-- End Table -->
+                        <form id="formCaricaFileCorso" action="/profilo/nuovo-allegato" method="POST" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="fileCorso" class="form-label">Seleziona file da caricare</label>
+                                <input type="hidden" name="IDCorso" id="id-corso-aggiungi-allegato">
+                                <input type="file" class="form-control" id="fileCorso" name="Allegato" accept="video/mp4, video/webm, video/quicktime, video/ogg, audio/mpeg, audio/ogg, audio/wav" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Carica File</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- JS Caricamento file -->
+                <script>
+                    
+                </script>
+
+                <!-- Gestione Prenotazioni Eventi -->
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center mb-3">
+                            <i class="bi bi-calendar-check-fill me-2"></i> Gestione Prenotazioni Eventi
+                        </h5>
+                        <!-- Filtro per evento -->
+                        <form class="mb-3">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-auto">
+                                    <label for="filtro-evento" class="col-form-label">Filtra per evento:</label>
+                                </div>
+                                <div class="col-auto">
+                                    <select id="filtro-evento" class="form-select">
+                                        <option value="tutti">Tutti gli eventi</option>
+                                        <% if(bookedEventsDetails && bookedEventsDetails.length > 0) { %>
+                                            <% bookedEventsDetails.filter((item, index, self) => self.findIndex(i => i.NomeEvento === item.NomeEvento) === index).forEach(event => { %>
+                                                <option value="<%= event.NomeEvento %>">
+                                                    <%= event.NomeEvento %>
+                                                </option>
+                                            <% });} %>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    Numero di prenotazioni: <span id="numero-prenotazioni">0</span>
+                                </div>
+                            </div>
+                        </form>
+                        <% if (bookedEventsDetails && bookedEventsDetails.length === 0) { %>
+                            <div class="alert alert-info" role="alert">
+                                Nessuna prenotazione per eventi al momento.
+                            </div>
+                        <% } else { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle" id="tabella-prenotazioni-eventi">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Evento</th>
+                                        <th>Ballerino/a</th>
+                                        <th>Email</th>
+                                        <th>Stato</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% bookedEventsDetails.forEach(prenotazione => { %>
+                                        <tr data-evento="<%= prenotazione.NomeEvento %>">
+                                            <td><%= prenotazione.NomeEvento %></td>
+                                            <td><%= prenotazione.NomeBallerino + ' ' + prenotazione.CognomeBallerino %></td>
+                                            <td><%= prenotazione.EmailBallerino %></td>
+                                            <td>
+                                                <% if (prenotazione.Stato === 'Richiesta') { %>
+                                                    <span class="badge bg-warning text-dark">In attesa</span>
+                                                <% } else if (prenotazione.Stato === 'Accettata') { %>
+                                                    <span class="badge bg-success">Confermato</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-secondary"><%= prenotazione.Stato %></span>
+                                                <% } %>
+                                            <td>
+                                                <% if (prenotazione.Stato === 'Richiesta') { %>
+                                                    <form method="POST" action="/profilo/aggiorna-stato-prenotazione" id="form-mgmt-event-accept-<%= prenotazione.IDPrenotazione %>">
+                                                        <input type="hidden" name="IDPrenotazione" value="<%= prenotazione.IDPrenotazione %>">
+                                                        <input type="hidden" name="Stato" value="Accettata">
+                                                    </form>
+                                                    <button type="submit" form="form-mgmt-event-accept-<%= prenotazione.IDPrenotazione %>" class="btn btn-outline-success btn-sm" title="Conferma Prenotazione">
+                                                        <i class="bi bi-check-circle"></i>
+                                                    </button>
+                                                    <form method="POST" action="/profilo/aggiorna-stato-prenotazione" id="form-mgmt-event-reject-<%= prenotazione.IDPrenotazione %>">
+                                                        <input type="hidden" name="IDPrenotazione" value="<%= prenotazione.IDPrenotazione %>">
+                                                        <input type="hidden" name="Stato" value="Rifiutata">
+                                                    </form>
+                                                    <button type="submit" form="form-mgmt-event-reject-<%= prenotazione.IDPrenotazione %>" class="btn btn-outline-danger btn-sm" title="Rifiuta Prenotazione">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </button>
+                                                <% } else { %>
+                                                    <button class="btn btn-outline-secondary btn-sm" disabled
+                                                        title="Prenotazione già gestita">
+                                                        <i class="bi bi-check2-circle"></i>
+                                                    </button>
+                                                <% } %>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <script>
+                    
+                </script>
+                <!-- Fine Gestione Prenotazioni Eventi -->
+
+                <!-- Calendar area -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center">
+                            <i class="bi bi-calendar-fill me-2"></i>Calendario Corsi
+                        </h5>
+                    </div>
+                    <!-- Current Month and Buttons (gathered together) -->
+                    <div class="d-flex justify-content-between align-items-center p-2">
+                        <button class="btn btn-outline-secondary" id="prev-month"><i
+                                class="bi bi-chevron-left"></i></button>
+                        <h6 id="current-month" class="text-center mb-0"></h6>
+                        <button class="btn btn-outline-secondary" id="next-month"><i
+                                class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div id="calendar" class="table-responsive p-2">
+                        <table class="table table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Lunedì</th>
+                                    <th>Martedì</th>
+                                    <th>Mercoledì</th>
+                                    <th>Giovedì</th>
+                                    <th>Venerdì</th>
+                                    <th>Sabato</th>
+                                    <th>Domenica</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-body">
+                                <!-- Calendar days will be dynamically generated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Fine Calendar area-->
+                <!-- Reviews Answer Section -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title d-flex align-items-center">
+                            <i class="bi bi-chat-left-text-fill me-2"></i>Risposte Recensioni
+                        </h5>
+                        <p class="card-text">Gestisci le recensioni e le domande degli utenti.</p>
+                        <% if (!coursesFeedback || coursesFeedback.length === 0) { %>
+                            <div class="alert alert-info" role="alert">
+                                Nessuna recensione al momento.
+                            </div>
+                        <% } else { %>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Recensione</th>
+                                        <th>Email</th>
+                                        <th>Corso</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% coursesFeedback.forEach(feedback => { %>
+                                    <tr>
+                                        <td><%= (feedback.Corpo.length > 42) ? feedback.Corpo.substring(0, 42) + '...' : feedback.Corpo %></td>
+                                        <td><%= feedback.EmailBallerino %></td>
+                                        <td><%= feedback.NomeCorso %></td>
+                                        <% if (feedback.IDRisposta) { %>
+                                            <td>
+                                                <span class="badge bg-success">Risposta inviata</span>
+                                            </td>
+                                        <% } else { %>
+                                        <td><button class="btn btn-outline-primary btn-sm answer-feedback" data-feedback-id="<%= feedback.IDRecensione %>" data-feedback-body="<%= feedback.Corpo %>" data-feedback-stars="<%= feedback.Valutazione %>">Rispondi</button></td>
+                                        <% } %>
+                                    </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <!-- Fine Reviews Answer Section -->
+            </main>
+            <!-- Fine Contenuto principale -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <%- include('../components/footer'); %>
+    <!-- Fine Footer -->
+
+
+    <% if (success) { %>
+    <!-- Toast for successful flash messages -->
+    <% success.forEach(function(message) { %>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Successo</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <%= message %>
+            </div>
+        </div>
+    </div>
+    <% });} %>
+
+    <% if (error) { %>
+        <% error.forEach(function(message) { %>
+            <!-- Toast for error flash messages -->
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto text-danger">Errore</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <%= message %>
+                    </div>
+                </div>
+            </div>
+    <% });} %>
+
+    <!-- Modal Modifica Descrizione -->
+    <div class="modal fade" id="modalModificaDescrizione" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalModificaDescrizioneLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <form id="formModificaDescrizione" autocomplete="off" action='/profilo/modifica-descrizione-scuola' method="POST">
+                    <div class="modal-header bg-warning text-white rounded-top-4">
+                        <h5 class="modal-title d-flex align-items-center" id="modalModificaDescrizioneLabel">
+                            <i class="bi bi-pencil-square-fill me-2 fs-3"></i>
+                            Modifica Descrizione Scuola
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Chiudi"></button>
+                    </div>
+                    <div class="modal-body bg-light px-4 py-4">
+                        <div class="container-fluid">
+                            <div class="row g-4 justify-content-center">
+                                <div class="col-md-12">
+                                    <label for="descrizioneScuola" class="form-label fw-semibold">
+                                        <i class="bi bi-info-circle-fill text-primary me-1"></i>Descrizione della scuola
+                                    </label>
+                                    <textarea style="white-space:pre-line;" class="form-control rounded-3 shadow-sm" id="descrizioneScuola" name="Descrizione" rows="5" required placeholder="Inserisci qui la descrizione della tua scuola di danza..."><%= (user.Descrizione)? user.Descrizione.trim() : '' %></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light rounded-bottom-4">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-save-fill me-2"></i> Salva Modifiche
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Aggiungi Corso -->
+    <div class="modal fade" id="modalAggiungiCorso" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalAggiungiCorsoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <form id="formAggiungiCorso" autocomplete="off" action='/profilo/nuovo-corso' method="POST">
+                    <div class="modal-header bg-success text-white rounded-top-4">
+                        <h5 class="modal-title d-flex align-items-center" id="modalAggiungiCorsoLabel">
+                            <i class="bi bi-plus-circle-fill me-2 fs-3"></i>
+                            Aggiungi Corso
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Chiudi"></button>
+                    </div>
+                    <div class="modal-body bg-light px-4 py-4">
+                        <div class="container-fluid">
+                            <div class="row g-4 justify-content-center">
+                                <div class="col-md-6">
+                                    <label for="nomeCorso" class="form-label fw-semibold">
+                                        <i class="bi bi-bookmark-star-fill text-primary me-1"></i>Nome del corso
+                                    </label>
+                                    <input type="text" class="form-control rounded-pill shadow-sm" id="nomeCorso"
+                                        name="Nome" required placeholder="Es. Hip Hop Base">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="istruttore" class="form-label fw-semibold">
+                                        <i class="bi bi-person-badge-fill text-info me-1"></i>Istruttore
+                                    </label>
+                                    <input type="text" class="form-control rounded-pill shadow-sm" id="istruttore"
+                                        name="Istruttore" required placeholder="Nome istruttore">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="categoria" class="form-label fw-semibold">
+                                        <i class="bi bi-tags-fill text-secondary me-1"></i>Categoria
+                                    </label>
+                                    <select class="form-select rounded-pill shadow-sm" id="categoria" name="Categoria"
+                                        required>
+                                        <option value="" selected disabled><i class="bi bi-question-circle"></i> Scegli
+                                            categoria</option>
+                                            <option value="Urban">Urban</option>
+                                            <option value="Latino & Caraibico">Latino & Caraibico</option>
+                                            <option value="Classico & Moderno">Classico & Moderno</option>
+                                            <option value="Coreografico">Coreografico</option>
+                                            <option value="Social & Swing">Social & Swing</option>
+                                            <option value="Gruppo & Fitness">Gruppo & Fitness</option>
+                                            <option value="Danze Orientali & Etniche">Danze Orientali & Etniche</option>
+                                            <option value="Folklore & Tradizione">Folklore & Tradizione</option>
+                                            <option value="Teatrale & Performativo">Teatrale & Performativo</option>
+                                            <option value="Acrobatico & Espressivo">Acrobatico & Espressivo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tipologia" class="form-label fw-semibold">
+                                        <i class="bi bi-ui-checks-grid text-warning me-1"></i>Tipologia di corso
+                                    </label>
+                                    <select class="form-select rounded-pill shadow-sm" id="tipologia" name="Tipologia"
+                                        required>
+                                        <option value="" selected disabled><i class="bi bi-question-circle"></i> Scegli
+                                            tipologia</option>
+                                        <option value="Privata">Lezione privata</option>
+                                        <option value="Singola">Lezione singola/Workshop</option>
+                                        <option value="Periodica" selected>Lezione settimanale</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="livello" class="form-label fw-semibold">
+                                        <i class="bi bi-bar-chart-steps text-secondary me-1"></i>Livello
+                                    </label>
+                                    <select class="form-select rounded-pill shadow-sm" id="livello" name="Livello"
+                                        required>
+                                        <option value="" selected disabled><i class="bi bi-question-circle"></i> Scegli
+                                            livello</option>
+                                        <option value="Principiante">Principiante</option>
+                                        <option value="Intermedio">Intermedio</option>
+                                        <option value="Avanzato">Avanzato</option>
+                                        <option value="Personalizzato">Personalizzato</option>
+                                        <option value="Open">Tutti i livelli (Open)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="prezzo" class="form-label fw-semibold">
+                                        <i class="bi bi-cash-coin text-success me-1"></i>Prezzo (singola sessione) €
+                                    </label>
+                                    <input type="number" min="0" step="0.01" class="form-control rounded-pill shadow-sm"
+                                        id="prezzo" name="Prezzo" required placeholder="Es. 15.00">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="dateInizio" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-plus-fill text-primary me-1"></i>Data inizio
+                                    </label>
+                                    <input type="date" class="form-control rounded-pill shadow-sm" id="dateInizio"
+                                        name="DateInizio" required>
+                                </div>
+                                <div class="col-md-6" id="dataFineContainer">
+                                    <label for="dateFine" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-x-fill text-danger me-1"></i>Data fine
+                                    </label>
+                                    <input type="date" class="form-control rounded-pill shadow-sm" id="dateFine"
+                                        name="DateFine">
+                                </div>
+                                <div class="col-md-6" id="orarioInizioContainer">
+                                    <label for="orarioInizio" class="form-label fw-semibold">
+                                        <i class="bi bi-clock-fill text-primary me-1"></i>Orario inizio
+                                    </label>
+                                    <input type="time" class="form-control rounded-pill shadow-sm" id="orarioInizio"
+                                        name="OrarioInizio" required>
+                                </div>
+                                <div class="col-md-6" id="orarioFineContainer">
+                                    <label for="orarioFine" class="form-label fw-semibold">
+                                        <i class="bi bi-clock-fill text-danger me-1"></i>Orario fine
+                                    </label>
+                                    <input type="time" class="form-control rounded-pill shadow-sm" id="orarioFine"
+                                        name="OrarioFine" required>
+                                </div>
+                                <!-- Checkbox lezioni private su appuntamento -->
+                                <div class="col-12">
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" id="lezioneAppuntamento"
+                                            name="Tipologia" value="Privata">
+                                        <label class="form-check-label fw-semibold" for="lezioneAppuntamento">
+                                            <i class="bi bi-clock-history text-primary me-1"></i>
+                                            Lezione privata su appuntamento (nasconde le date e la tipologia)
+                                        </label>
+                                        <div id="disclaimerPrezzo" class="form-text text-warning mt-2"
+                                            style="display:none;">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                            Per le lezioni private il prezzo deve essere specificato all'ora, non per
+                                            sessione.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-2"></i>Annulla
+                        </button>
+                        <input type="submit" class="btn btn-success rounded-pill px-4" form="formAggiungiCorso" value="Aggiungi Corso">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Aggiungi Corso -->
+
+    <!-- Modal Aggiungi Evento -->
+    <div class="modal fade" id="modalAggiungiEvento" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalAggiungiEventoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <form id="formAggiungiEvento" method="POST" enctype="multipart/form-data" action="/profilo/crea-evento" autocomplete="off">
+                    <div class="modal-header bg-primary text-white rounded-top-4">
+                        <h5 class="modal-title d-flex align-items-center" id="modalAggiungiEventoLabel">
+                            <i class="bi bi-calendar-plus-fill me-2 fs-3"></i>
+                            Aggiungi Evento
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Chiudi"></button>
+                    </div>
+                    <div class="modal-body bg-light px-4 py-4">
+                        <div class="container-fluid">
+                            <div class="row g-4 justify-content-center">
+                                <div class="col-md-12">
+                                    <label for="nomeEvento" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-event-fill text-primary me-1"></i>Nome dell'evento
+                                    </label>
+                                    <input type="text" class="form-control rounded-pill shadow-sm" id="nomeEvento"
+                                        name="nomeEvento" required placeholder="Es. Saggio di fine anno">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="descrizioneEvento" class="form-label fw-semibold">
+                                        <i class="bi bi-file-earmark-text-fill text-primary me-1"></i>Descrizione
+                                    </label>
+                                    <textarea class="form-control rounded-pill shadow-sm" id="descrizioneEvento"
+                                        name="descrizioneEvento" rows="3" required placeholder="Es. Descrizione dell'evento"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="luogoEvento" class="form-label fw-semibold">
+                                        <i class="bi bi-geo-alt-fill text-info me-1"></i>Luogo
+                                    </label>
+                                    <input type="text" class="form-control rounded-pill shadow-sm" id="luogoEvento"
+                                        name="luogoEvento" required placeholder="Es. Teatro Comunale">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="prezzoEvento" class="form-label fw-semibold">
+                                        <i class="bi bi-cash-coin text-success me-1"></i>Prezzo €
+                                    </label>
+                                    <input type="number" min="0" step="0.01" class="form-control rounded-pill shadow-sm"
+                                        id="prezzoEvento" name="prezzoEvento" required placeholder="Es. 10.00">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="dataOraEvento" class="form-label fw-semibold">
+                                        <i class="bi bi-clock-fill text-warning me-1"></i>Data e Ora
+                                    </label>
+                                    <input type="datetime-local" class="form-control rounded-pill shadow-sm"
+                                        id="dataOraEvento" name="dataOraEvento" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="locandinaEvento" class="form-label fw-semibold">
+                                        <i class="bi bi-image-fill text-success me-1"></i>Locandina Evento
+                                    </label>
+                                    <input type="file" class="form-control rounded-pill shadow-sm" id="locandinaEvento"
+                                        name="locandinaEvento" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-2"></i>Annulla
+                        </button>
+                        <button form="formAggiungiEvento" type="submit" class="btn btn-primary rounded-pill px-4">
+                            <i class="bi bi-calendar-plus-fill me-2"></i>Aggiungi Evento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Aggiungi Evento -->
+
+    <!-- Modal Modifica Evento -->
+    <div class="modal fade" id="modalModificaEvento" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalModificaEventoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <form id="formModificaEvento" autocomplete="off" method="POST" action="/profilo/modifica-evento" enctype="multipart/form-data">
+                    <div class="modal-header bg-warning text-dark rounded-top-4">
+                        <h5 class="modal-title d-flex align-items-center" id="modalModificaEventoLabel">
+                            <i class="bi bi-pencil-square me-2 fs-3"></i>
+                            Modifica Evento
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                    </div>
+                    <div class="modal-body bg-light px-4 py-4">
+                        <div class="container-fluid">
+                            <div class="row g-4 justify-content-center">
+                                <div class="col-md-12">
+                                    <label for="selezionaEvento" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-event-fill text-primary me-1"></i>Seleziona Evento
+                                    </label>
+                                    <select class="form-select rounded-pill shadow-sm" id="selezionaEvento"
+                                        name="IDEventoMod" required>
+                                        <option value="" disabled selected>Seleziona un evento</option>
+                                        <% events.forEach(event => { %>
+                                            <option data-event-id="<%= event.IDEvento %>" data-event-name="<%= event.Nome %>"
+                                                data-event-location="<%= event.Luogo %>" data-event-date="<%= new Date(event.DataOra) %>"
+                                                data-event-poster="<%= event.Locandina %>" data-event-description="<%= event.Descrizione %>" data-event-price="<%= event.Prezzo %>"
+                                                value="<%= event.IDEvento %>"><%= event.Nome %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="nomeEventoMod" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-event-fill text-primary me-1"></i>Nome dell'evento
+                                    </label>
+                                    <input type="text" class="form-control rounded-pill shadow-sm" id="nomeEventoMod"
+                                        name="nomeEventoMod" required placeholder="Inserire il nome dell'evento">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="descrizioneEventoMod" class="form-label fw-semibold">
+                                        <i class="bi bi-file-earmark-text-fill text-primary me-1"></i>Descrizione
+                                    </label>
+                                    <textarea class="form-control rounded-pill shadow-sm" id="descrizioneEventoMod"
+                                        name="descrizioneEventoMod" rows="3" required placeholder="Inserire la descrizione dell'evento"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="luogoEventoMod" class="form-label fw-semibold">
+                                        <i class="bi bi-geo-alt-fill text-info me-1"></i>Luogo
+                                    </label>
+                                    <input type="text" class="form-control rounded-pill shadow-sm" id="luogoEventoMod"
+                                        name="luogoEventoMod" required placeholder="Es. Via XXV Aprile, 123 Roma">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="prezzoEventoMod" class="form-label fw-semibold">
+                                        <i class="bi bi-cash-coin text-success me-1"></i>Prezzo €
+                                    </label>
+                                    <input type="number" min="0" step="0.01" class="form-control rounded-pill shadow-sm"
+                                        id="prezzoEventoMod" name="prezzoEventoMod" required placeholder="Es. 10.00">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="dataOraEventoMod" class="form-label fw-semibold">
+                                        <i class="bi bi-clock-fill text-warning me-1"></i>Data e Ora
+                                    </label>
+                                    <input type="datetime-local" class="form-control rounded-pill shadow-sm"
+                                        id="dataOraEventoMod" name="dataOraEventoMod" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="locandinaEventoMod" class="form-label fw-semibold">
+                                        <i class="bi bi-image-fill text-success me-1"></i>Locandina Evento (lascia vuoto
+                                        per non modificare)
+                                    </label>
+                                    <input type="file" class="form-control rounded-pill shadow-sm"
+                                        id="locandinaEventoMod" name="locandinaEventoMod" accept="image/*">
+                                    <small class="form-text text-muted">Locandina attuale: <a href="/images/default-locandina.webp"
+                                            id="locandinaAttualeLink" target="_blank">Nessuna</a></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-2"></i>Annulla
+                        </button>
+                        <button type="submit" class="btn btn-warning rounded-pill px-4">
+                            <i class="bi bi-save-fill me-2"></i>Salva Modifiche
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+    </script>
+    <!-- Fine Modal Modifica Evento -->
+
+    <!-- Modal Elimina Evento (Lista Eventi) -->
+    <div class="modal fade" id="modalEliminaEvento" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalEliminaEventoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-danger text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalEliminaEventoLabel">
+                        <i class="bi bi-trash-fill me-2 fs-3"></i>
+                        Gestisci ed Elimina Eventi
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-4">
+                    <p>Seleziona un evento dalla lista per eliminarlo. L'azione è irreversibile.</p>
+                    <div class="table-responsive">
+                        <% if (!events || events.length === 0) { %>
+                            <div class="alert alert-info" role="alert">
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                                Nessun evento disponibile.
+                            </div>
+                        <% } else { %>
+                        <table class="table table-hover align-middle" id="tabellaEventiDaEliminare">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nome Evento</th>
+                                    <th>Data e Ora</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% events.forEach(event => { %>
+                                    <tr data-event-id="<%= event.IDEvento %>" data-event-name="<%= event.Nome %>">
+                                        <td><%= event.Nome %></td>
+                                        <td><%= new Date(event.DataOra).toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+                                        <td>
+                                            <button type="button"
+                                                class="btn btn-outline-danger btn-sm delete-event-from-list-btn"
+                                                title="Elimina questo evento">
+                                                <i class="bi bi-trash"></i> Elimina
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% });} %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-end px-4 py-3">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Chiudi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Elimina Evento (Lista Eventi) -->
+
+    <!-- Modal Conferma Eliminazione Singolo Evento -->
+    <div class="modal fade" id="modalConfermaEliminazioneSingoloEvento" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalConfermaEliminazioneSingoloEventoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-danger text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalConfermaEliminazioneSingoloEventoLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                        Conferma Eliminazione
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-3">
+                    <p>Sei sicuro di voler eliminare l'evento: <strong id="nomeEventoDaEliminareSingolo"></strong>?</p>
+                    <p class="small text-danger"><i class="bi bi-exclamation-circle-fill"></i> Questa azione è
+                        irreversibile e cancellerà tutti i dati associati, incluse le prenotazioni.</p>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Annulla
+                    </button>
+                    <form id="formEliminaSingoloEvento" method="POST" action="/profilo/elimina-evento">
+                        <input type="hidden" id="idEventoDaEliminareSingolo" name="IDEvento">
+                    </form>
+                    <button type="submit" form="formEliminaSingoloEvento" class="btn btn-danger rounded-pill px-4"  id="confermaEliminazioneSingoloBtn">
+                        <i class="bi bi-trash-fill me-2"></i>Elimina Definitivamente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Conferma Eliminazione Singolo Evento -->
+
+    <!-- Modal Seleziona Corso da Modificare -->
+    <div class="modal fade" id="modalSelezionaModificaCorso" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="modalSelezionaModificaCorsoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalSelezionaModificaCorsoLabel">
+                        <i class="bi bi-pencil-square me-2 fs-3"></i>
+                        Seleziona Corso da Modificare
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-4">
+                    <p>Seleziona un corso dalla lista per modificarne i dettagli.</p>
+                    <% if(!courses || courses.length === 0) { %>
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Non hai corsi.
+                        </div>
+                    <% } else { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="tabellaCorsiDaModificare">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nome Corso</th>
+                                    <th>Istruttore</th>
+                                    <th>Tipologia</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% courses.forEach(course => { %>
+                                    <tr data-course-id="<%= course.IDCorso %>" 
+                                        data-course-name="<%= course.Nome %>"
+                                        data-course-instructor="<%= course.Istruttore %>"
+                                        data-course-type="<%= course.Tipologia %>" 
+                                        data-course-category="<%= course.CategoriaCorso %>"
+                                        data-course-level="<%= course.Livello %>"
+                                        data-course-price="<%= course.Prezzo %>"
+                                        data-course-start-date="<%= (course.DataInizio) ? new Date(course.DataInizio).toISOString().split('T')[0] : '' %>"
+                                        data-course-end-date="<%= (course.DataFine) ? new Date(course.DataFine).toISOString().split('T')[0] : '' %>"
+                                        data-course-start-time="<%= (course.OrarioInizio) ? course.OrarioInizio : '' %>"
+                                        data-course-end-time="<%= (course.OrarioFine) ? course.OrarioFine : '' %>"
+                                        data-course-appointment="<%= (course.Tipologia === 'Privata' && !course.DataInizio) ? 'true' : 'false' %>">
+                                        <td><%= course.Nome %></td>
+                                        <td><%= course.Istruttore %></td>
+                                        <td><%= course.Tipologia === 'Privata' ? 'Lezione privata' : (course.Tipologia === 'Singola' ? 'Lezione singola/Workshop' : 'Lezione settimanale') %></td>
+                                        <td>
+                                            <button type="button"
+                                                class="btn btn-outline-primary btn-sm modify-course-from-list-btn"
+                                                title="Modifica questo corso">
+                                                <i class="bi bi-pencil"></i> Modifica
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <% });} %>
+                            </tbody>
+                        </table>
+                    </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-end px-4 py-3">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Chiudi
+                    </button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Seleziona Corso da Modificare -->
+
+    <!-- Modal Modifica Corso -->
+    <div class="modal fade" id="modalModificaCorso" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalModificaCorsoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <form id="formModificaCorso" autocomplete="off" method="POST" action="/profilo/modifica-corso">
+                    <input type="hidden" id="idCorsoMod" name="idCorsoMod">
+                    <div class="modal-header bg-warning text-dark rounded-top-4">
+                        <h5 class="modal-title d-flex align-items-center" id="modalModificaCorsoLabel">
+                            <i class="bi bi-pencil-fill me-2 fs-3"></i>
+                            Modifica Corso
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                    </div>
+                    <div class="modal-body bg-light px-4 py-4">
+                        <div class="container-fluid">
+                            <div class="row g-4 justify-content-center">
+                                <div class="col-md-6">
+                                    <label for="nomeCorsoMod" class="form-label fw-semibold">
+                                        <i class="bi bi-bookmark-star-fill text-primary me-1"></i>Nome del corso
+                                    </label>
+                                    <input type="text" class="form-control rounded-pill shadow-sm" id="nomeCorsoMod"
+                                        name="nomeCorsoMod" required placeholder="Es. Hip Hop Base">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="istruttoreMod" class="form-label fw-semibold">
+                                        <i class="bi bi-person-badge-fill text-info me-1"></i>Istruttore
+                                    </label>
+                                    <input type="text" class="form-control rounded-pill shadow-sm" id="istruttoreMod"
+                                        name="istruttoreMod" required placeholder="Nome istruttore">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="categoriaMod" class="form-label fw-semibold">
+                                        <i class="bi bi-tags-fill text-secondary me-1"></i>Categoria
+                                    </label>
+                                    <select class="form-select rounded-pill shadow-sm" id="categoriaMod" name="categoriaMod"
+                                        required>
+                                        <option value="" selected disabled><i class="bi bi-question-circle"></i> Scegli categoria</option>              
+                                            <option value="Urban">Urban</option>
+                                            <option value="Latino & Caraibico">Latino & Caraibico</option>
+                                            <option value="Classico & Moderno">Classico & Moderno</option>
+                                            <option value="Coreografico">Coreografico</option>
+                                            <option value="Social & Swing">Social & Swing</option>
+                                            <option value="Gruppo & Fitness">Gruppo & Fitness</option>
+                                            <option value="Danze Orientali & Etniche">Danze Orientali & Etniche</option>
+                                            <option value="Folklore & Tradizione">Folklore & Tradizione</option>
+                                            <option value="Teatrale & Performativo">Teatrale & Performativo</option>
+                                            <option value="Acrobatico & Espressivo">Acrobatico & Espressivo</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tipologiaMod" class="form-label fw-semibold">
+                                        <i class="bi bi-ui-checks-grid text-warning me-1"></i>Tipologia di corso
+                                    </label>
+                                    <select class="form-select rounded-pill shadow-sm" id="tipologiaMod"
+                                        name="tipologiaMod" required>
+                                        <option value="" disabled><i class="bi bi-question-circle"></i> Scegli tipologia
+                                        </option>
+                                        <option value="Privata">Lezione privata</option>
+                                        <option value="Singola">Lezione singola/Workshop</option>
+                                        <option value="Periodica">Lezione settimanale</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="livelloMod" class="form-label fw-semibold">
+                                        <i class="bi bi-bar-chart-steps text-secondary me-1"></i>Livello
+                                    </label>
+                                    <select class="form-select rounded-pill shadow-sm" id="livelloMod" name="livelloMod"
+                                        required>
+                                        <option value="" disabled><i class="bi bi-question-circle"></i> Scegli livello
+                                        </option>
+                                        <option value="Principiante">Principiante</option>
+                                        <option value="Intermedio">Intermedio</option>
+                                        <option value="Avanzato">Avanzato</option>
+                                        <option value="Personalizzato">Personalizzato</option>
+                                        <option value="Open">Tutti i livelli (Open)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="prezzoMod" class="form-label fw-semibold">
+                                        <i class="bi bi-cash-coin text-success me-1"></i>Prezzo (singola sessione) €
+                                    </label>
+                                    <input type="number" min="0" step="0.01" class="form-control rounded-pill shadow-sm"
+                                        id="prezzoMod" name="prezzoMod" required placeholder="Es. 15.00">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="dataInizioMod" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-plus-fill text-primary me-1"></i>Data inizio
+                                    </label>
+                                    <input type="date" class="form-control rounded-pill shadow-sm" id="dataInizioMod"
+                                        name="dataInizioMod" required>
+                                </div>
+                                <div class="col-md-6" id="dataFineContainerMod">
+                                    <label for="dataFineMod" class="form-label fw-semibold">
+                                        <i class="bi bi-calendar-x-fill text-danger me-1"></i>Data fine
+                                    </label>
+                                    <input type="date" class="form-control rounded-pill shadow-sm" id="dataFineMod"
+                                        name="dataFineMod">
+                                </div>
+                                <div class="col-md-6" id="orarioInizioContainerMod">
+                                    <label for="orarioInizioMod" class="form-label fw-semibold">
+                                        <i class="bi bi-clock-fill text-primary me-1"></i>Orario inizio
+                                    </label>
+                                    <input type="time" class="form-control rounded-pill shadow-sm" id="orarioInizioMod"
+                                        name="orarioInizioMod" required>
+                                </div>
+                                <div class="col-md-6" id="orarioFineContainerMod">
+                                    <label for="orarioFineMod" class="form-label fw-semibold">
+                                        <i class="bi bi-clock-fill text-danger me-1"></i>Orario fine
+                                    </label>
+                                    <input type="time" class="form-control rounded-pill shadow-sm" id="orarioFineMod"
+                                        name="orarioFineMod" required>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" id="lezioneAppuntamentoMod"
+                                            name="tipologiaMod" value="Privata">
+                                        <label class="form-check-label fw-semibold" for="lezioneAppuntamentoMod">
+                                            <i class="bi bi-clock-history text-primary me-1"></i>
+                                            Lezione privata su appuntamento (nasconde le date e la tipologia)
+                                        </label>
+                                        <div id="disclaimerPrezzoMod" class="form-text text-warning mt-2"
+                                            style="display:none;">
+                                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                            Per le lezioni private il prezzo deve essere specificato all'ora, non per
+                                            sessione.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-2"></i>Annulla
+                        </button>
+                        <button type="submit" class="btn btn-warning rounded-pill px-4">
+                            <i class="bi bi-save-fill me-2"></i>Salva Modifiche
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Modifica Corso -->
+
+    <!-- Modal Elimina Corso (Lista Corsi) -->
+    <div class="modal fade" id="modalEliminaCorsoLista" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="modalEliminaCorsoListaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-danger text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalEliminaCorsoListaLabel">
+                        <i class="bi bi-trash-fill me-2 fs-3"></i>
+                        Gestisci ed Elimina Corsi
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-4">
+                    <p>Seleziona un corso dalla lista per eliminarlo. L'azione è irreversibile.</p>
+                    <% if(!courses || courses.length === 0) { %>
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Non hai corsi.
+                        </div>
+                    <% } else { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="tabellaCorsiDaEliminare">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nome Corso</th>
+                                    <th>Istruttore</th>
+                                    <th>Tipologia</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% courses.forEach(course => { %>
+                                <tr data-course-id="<%= course.IDCorso %>" data-course-name="<%= course.Nome %>"
+                                    data-course-type="<%= course.Tipologia %>" data-course-level="<%= course.Livello %>"
+                                    data-course-start-date="<%= (course.DataInizio) ? new Date(course.DataInizio).toISOString().split('T')[0] : '' %>"
+                                    data-course-end-date="<%= (course.DataFine) ? new Date(course.DataFine).toISOString().split('T')[0] : '' %>">
+                                    <td><%= course.Nome %></td>
+                                    <td><%= course.Istruttore %></td>
+                                    <td><%= course.Tipologia %></td>
+                                    <td>
+                                        <button type="button"
+                                            class="btn btn-outline-danger btn-sm delete-course-from-list-btn"
+                                            title="Elimina questo corso">
+                                            <i class="bi bi-trash"></i> Elimina
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% } %>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-end px-4 py-3">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Chiudi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Elimina Corso (Lista Corsi) -->
+
+    <!-- Modal Conferma Eliminazione Singolo Corso -->
+    <div class="modal fade" id="modalConfermaEliminazioneSingoloCorso" data-bs-backdrop="static"
+        data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalConfermaEliminazioneSingoloCorsoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-danger text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalConfermaEliminazioneSingoloCorsoLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+                        Conferma Eliminazione Corso
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-3">
+                    <p>Sei sicuro di voler eliminare il corso: <strong id="nomeCorsoDaEliminareSingolo"></strong>?</p>
+                    <p class="small text-danger"><i class="bi bi-exclamation-circle-fill"></i> Questa azione è
+                        irreversibile e cancellerà tutti i dati associati, incluse le iscrizioni.</p>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Annulla
+                    </button>
+                    <form id="formConfermaEliminazioneCorsoSingolo" method="POST" action="/profilo/elimina-corso">
+                        <input type="hidden" id="idCorsoDaEliminareSingolo" name="courseID">
+                    </form>
+                    <button type="submit" form="formConfermaEliminazioneCorsoSingolo" class="btn btn-danger rounded-pill px-4"
+                        id="confermaEliminazioneCorsoSingoloBtn">
+                        <i class="bi bi-trash-fill me-2"></i>Elimina Definitivamente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Conferma Eliminazione Singolo Corso -->
+    <script>
+        
+    </script>
+
+    <!-- Modal per la modifica delle informazioni della scuola -->
+    <div class="modal fade" id="modalModificaScuola" tabindex="-1" aria-labelledby="modalModificaScuolaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalModificaScuolaLabel">
+                        <i class="bi bi-pencil-square me-2 fs-3"></i>
+                        Modifica Informazioni Scuola
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-4">
+                    <form id="modificaScuolaForm" action="/profilo/modifica-scuola" method="POST">
+                        <div class="mb-3">
+                            <label for="nomeScuola" class="form-label">Nome Scuola</label>
+                            <input name="nome" type="text" class="form-control" id="nomeScuola"
+                                placeholder="Inserisci il nome della scuola" value="<%= user.Nome %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="indirizzoScuola" class="form-label">Indirizzo Scuola</label>
+                            <input name="indirizzo" type="text" class="form-control" id="indirizzoScuola"
+                                placeholder="Inserisci l'indirizzo della scuola" value="<%= user.Indirizzo %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cittaScuola" class="form-label">Città Scuola</label>
+                            <input name="citta" type="text" class="form-control" id="cittaScuola"
+                                placeholder="Inserisci la città della scuola" value="<%= user.Citta %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="capScuola" class="form-label">CAP Scuola</label>
+                            <input name="cap" type="text" class="form-control" id="capScuola"
+                                placeholder="Inserisci il CAP della scuola" value="<%= user.CAP %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="provinciaScuola" class="form-label">Provincia Scuola</label>
+                            <input name="provincia" type="text" class="form-control" id="provinciaScuola"
+                                placeholder="Inserisci la provincia della scuola" value="<%= user.Provincia %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="regioneScuola" class="form-label">Regione Scuola</label>
+                            <select name="regione" class="form-select" id="regioneScuola" required>
+                                <option value="" disabled selected>Seleziona la regione della scuola</option>
+                                <option value="Lazio">Lazio</option>
+                                <option value="Campania">Campania</option>
+                                <option value="Sicilia">Sicilia</option>
+                                <option value="Lombardia">Lombardia</option>
+                                <option value="Piemonte">Piemonte</option>
+                                <option value="Emilia Romagna">Emilia Romagna</option>
+                                <option value="Toscana">Toscana</option>
+                                <option value="Liguria">Liguria</option>
+                                <option value="Marche">Marche</option>
+                                <option value="Abruzzo">Abruzzo</option>
+                                <option value="Umbria">Umbria</option>
+                                <option value="Calabria">Calabria</option>
+                                <option value="Basilicata">Basilicata</option>
+                                <option value="Puglia">Puglia</option>
+                                <option value="Molise">Molise</option>
+                                <option value="Sardegna">Sardegna</option>
+                                <option value="Friuli Venezia Giulia">Friuli Venezia Giulia</option>
+                                <option value="Trentino Alto Adige">Trentino Alto Adige</option>
+                                <option value="Valle d'Aosta">Valle d'Aosta</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefonoScuola" class="form-label">Telefono Scuola</label>
+                            <input name="telefono" type="tel" class="form-control" id="telefonoScuola"
+                                placeholder="Inserisci il numero di telefono della scuola" value="<%= user.Telefono %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailScuola" class="form-label">Email Scuola</label>
+                            <input name="email" type="email" class="form-control" id="emailScuola"
+                                placeholder="Inserisci l'email della scuola" value="<%= user.Email %>" required>
+                        </div>
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="passwordScuola" class="form-label">Nuova Password</label>
+                            <input name="password" type="password" class="form-control" id="passwordScuola"
+                                placeholder="Inserisci una nuova password">
+                            <p class="text-muted small mt-1">Lascia vuoto se non vuoi modificare la password.</p>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Annulla
+                    </button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4" form="modificaScuolaForm">
+                        <i class="bi bi-save me-2"></i>Salva Modifiche
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal per la modifica delle informazioni della scuola -->
+
+    <!-- Modal Modifica foto scuola -->
+    <div class="modal fade" id="modalModificaFotoProfilo" tabindex="-1" aria-labelledby="modalModificaFotoProfiloLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalModificaFotoProfiloLabel">
+                        <i class="bi bi-image me-2 fs-3"></i>
+                        Modifica Foto Profilo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-4">
+                    <form id="modificaFotoScuolaForm" enctype="multipart/form-data" action="/profilo/modifica-foto-scuola" method="POST">
+                        <div class="mb-3">
+                            <label for="fotoScuola" class="form-label">Carica Nuova Foto</label>
+                            <input type="file" class="form-control" id="fotoScuola" name="fotoScuola"
+                                placeholder="Carica una nuova foto per la scuola"
+                                accept="image/*" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Annulla
+                    </button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4" form="modificaFotoScuolaForm">
+                        <i class="bi bi-image me-2"></i>Carica Foto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Modifica foto scuola -->
+
+    <!-- Modal Rispondi Feedback -->
+    <div class="modal fade" id="modalRispondiFeedback" tabindex="-1" aria-labelledby="modalRispondiFeedbackLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title d-flex align-items-center" id="modalRispondiFeedbackLabel">
+                        <i class="bi bi-chat-dots me-2 fs-3"></i>
+                        Rispondi al Feedback
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body bg-light px-4 py-4">
+                    <form id="rispondiFeedbackForm" action="/profilo/rispondi-feedback" method="POST">
+                        <input type="hidden" class="form-control" id="feedbackId" name="IDRecensione"
+                            placeholder="ID del feedback a cui rispondere" required>
+                        <!-- Show feedback content -->
+                        <div class="mb-3">
+                            <label for="feedbackStars" class="form-label">Valutazione</label>
+                            <input type="text" class="form-control" id="feedbackStars"
+                                placeholder="Valutazione del feedback" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackContent" class="form-label">Contenuto del Feedback</label>
+                            <textarea class="form-control" id="feedbackContent"
+                                rows="4" readonly></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="rispostaFeedback" class="form-label">Risposta</label>
+                            <textarea class="form-control" id="rispostaFeedback" name="Corpo"
+                                rows="4" placeholder="Scrivi la tua risposta al feedback" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-white rounded-bottom-4 d-flex justify-content-between px-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Annulla
+                    </button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4" form="rispondiFeedbackForm">
+                        <i class="bi bi-send me-2"></i>Invia Risposta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Fine Modal Rispondi Feedback -->
+
+    <!-- JS For Rispondi Feedback Modal -->
+    <script>
+
+    </script>
+    
+
+    <!-- Custom JS for Calendar -->
+    <script type="application/json" id="calendar-data">
+        <%- JSON.stringify(calendarCourses) %>
+    </script>
+
+    <script>
+        const data = JSON.parse(document.getElementById('calendar-data').textContent);
+        let calendar = new Calendar();
+        calendar.addActivityJSON(data);
+    </script>
+</body>
+
+</html>

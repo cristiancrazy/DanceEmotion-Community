@@ -1,0 +1,119 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+import dotenv from 'dotenv';
+dotenv.config({quiet: true}); // Load environment variables from .env file
+import app from '../app.mjs';
+import debugLib from 'debug';
+import http from 'http';
+
+const debug = debugLib('20054593-capraro:server');
+
+/**
+ * Get port from environment and store in Express.
+ * Normalize it to a number, string, or false.
+ * Default to '3000' if no port is specified in the environment.
+ */
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Get address from environment and normalize it.
+ * Default to '0.0.0.0'
+ */
+const address = normalizeAddress(process.env.ADDRESS || '0.0.0.0');
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port, address);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Normalize address into a valid format.
+ */
+
+function normalizeAddress(val) {
+  if (typeof val !== 'string') {
+    return false;
+  }
+
+  // Check if the address is a valid IP or hostname
+  const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+  if (!ipRegex.test(val) && !/^[a-zA-Z0-9.-]+$/.test(val)) {
+    return false;
+  }
+
+  return val;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  const bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

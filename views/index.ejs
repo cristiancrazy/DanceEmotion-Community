@@ -1,0 +1,153 @@
+<!--
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: DanceEMotion - Index page template featuring a video background, sections for schools and events
+    and a footer with links and social media icons.
+-->
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DanceEMotion - Scopri le migliori scuole di ballo e gli eventi più emozionanti. Unisciti alla nostra community!">
+    <title>►DanceEMotion◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+</head>
+
+<body class="bg-white">
+    <!-- Navbar principale -->
+    <%- include('components/header'); %>
+    <!-- Fine Navbar principale-->
+
+    <main>
+        <!-- Hero with Video Background -->
+        <section class="position-relative text-center text-white py-5" style="height: 100vh; overflow: hidden;">
+            <!-- Video Background -->
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                <video autoplay muted loop class="w-100 h-100" style="object-fit: cover;">
+                    <!-- Primary source for modern browsers -->
+                    <source src="/videos/DEM-video.webm" type="video/webm">
+                    <!-- Fallback for browsers that do not support WebM -->
+                    <source src="https://edge.rootlet.it/DanceEMotion/DEM-video.mp4" type="video/mp4">
+                    Your browser does not support video playback.
+                </video>
+            </div>
+            <!-- Overlay -->
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
+            <!-- Content -->
+            <div class="container position-relative z-1">
+                <h1 class="display-4">Benvenuti su DanceEMotion</h1>
+                <p class="lead">Scopri le migliori scuole di ballo, eventi e tanto altro. Unisciti alla nostra community
+                    e vivi la passione per il ballo!</p>
+                <a href="#about-section" class="btn btn-primary btn-lg">Scopri di più</a>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section id="about-section" class="container py-5">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <i class="bi bi-people fs-1 text-primary"></i>
+                    <h3 class="mt-3">Community</h3>
+                    <p>Unisciti a una community di appassionati di ballo e condividi la tua passione con altri
+                        ballerini.</p>
+                </div>
+                <div class="col-md-4">
+                    <i class="bi bi-calendar-event fs-1 text-success"></i>
+                    <h3 class="mt-3">Eventi</h3>
+                    <p>Partecipa a eventi esclusivi e spettacoli organizzati dalle migliori scuole di ballo.</p>
+                </div>
+                <div class="col-md-4">
+                    <i class="bi bi-geo-alt fs-1 text-danger"></i>
+                    <h3 class="mt-3">Scuole</h3>
+                    <p>Trova le scuole di ballo più vicine a te e inizia il tuo viaggio nella danza.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="bg-light py-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h2>Perché scegliere DanceEMotion?</h2>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-success"></i> Accesso a una rete di scuole di ballo di
+                                alta qualità</li>
+                            <li><i class="bi bi-people text-primary"></i> Comunità inclusiva e atmosfera accogliente
+                            </li>
+                            <li><i class="bi bi-heart text-danger"></i> Benessere e salute al primo posto</li>
+                            <li><i class="bi bi-calendar-event text-success"></i> Eventi esclusivi e riservati ai membri
+                            </li>
+                            <li><i class="bi bi-person-check text-info"></i> Nessun limite di età o esperienza
+                                necessaria</li>
+                            <li><i class="bi bi-lightbulb text-warning"></i> Supporto e risorse per tutti i livelli di
+                                abilità</li>
+                            <li><i class="bi bi-tags text-success"></i> Sconti su eventi convenzionati</li>
+                            <li><i class="bi bi-stars text-warning"></i> Divertimento garantito al 100%</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <img src="images/dance-i1.png" alt="Dance Illustration" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two Columns Section -->
+        <section class="container py-5">
+            <div class="row text-center">
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body">
+                            <i class="bi bi-building fs-1 text-primary"></i>
+                            <h3 class="card-title mt-3">Scuole di Ballo</h3>
+                            <p class="card-text">Trova le migliori scuole di ballo vicino a te e inizia il tuo viaggio
+                                nella danza.</p>
+                            <a href="/scuole" class="btn btn-primary"
+                                aria-label="Scopri di più sulle scuole di ballo">Scopri di più</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body">
+                            <i class="bi bi-calendar-event fs-1 text-success"></i>
+                            <h3 class="card-title mt-3">Eventi di Danza</h3>
+                            <p class="card-text">Partecipa agli eventi più emozionanti e vivi la passione per il ballo.
+                            </p>
+                            <a href="/eventi" class="btn btn-success"
+                                aria-label="Scopri di più sugli eventi di danza">Scopri di più</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <% if(!user) { %>
+        <!-- Call to Action -->
+        <section class="bg-primary text-white text-center py-5">
+            <div class="container">
+                <h2>Pronto a iniziare il tuo viaggio nella danza?</h2>
+                <a href="/registrazione" class="btn btn-light btn-lg mt-3">Iscriviti ora</a>
+            </div>
+        </section>
+        <% } %>
+    </main>
+
+    <!-- Footer della pagina -->
+    <%- include('components/footer'); %>
+</body>
+</html>

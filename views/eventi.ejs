@@ -1,0 +1,242 @@
+<!--
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: Events search page for DanceEMotion
+    This page allows users to search for dance events, view event details, and apply filters.
+    The page includes a search bar and a modal for event details.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="DanceEMotion - Cerca eventi di danza, feste danzanti e workshop in Italia. Scopri le migliori scuole di ballo e partecipa agli eventi più emozionanti!">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • Eventi◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <!-- Custom JS -->
+    <script src="/javascripts/eventi.js" defer></script>
+    <script src="/javascripts/geolocalizzazione-eventi.js" defer></script>
+</head>
+
+<body class="bg-white">
+    <!-- Navbar principale -->
+    <%- include('components/header'); %>
+        <!-- Fine Navbar principale-->
+
+        <!-- Inizio sezione principale -->
+        <main>
+            <!-- Barra di ricerca -->
+            <header class="p-2">
+                <div class="container-fluid mt-3 mb-3">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                            <form class="d-flex gap-2" role="search" method="GET" action="/eventi">
+                                <input class="form-control" name="name" type="search" placeholder="Cerca eventi..."
+                                    aria-label="Search">
+                                <!-- Location filter -->
+                                <button id="locationButton" class="btn btn-outline-secondary d-inline-flex" type="button"><i
+                                        class="bi bi-geo"></i>Localizzazione</button>
+                                <!-- Filters -->
+                                <button id="filterButton" class="btn btn-outline-secondary d-inline-flex"
+                                    type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
+                                    <i class="bi bi-filter"></i>Filtri
+                                </button>
+                                <% if(searchMode) { %>
+                                    <a class="btn btn-outline-danger" href="/eventi">Reset</a>
+                                <% } %>
+                                <button class="btn btn-outline-success" type="submit">Cerca</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Fine barra di ricerca -->
+            <!-- Card degli eventi -->
+            <div class="container <%= (!events || events.length === 0) ? 'vh-100' : '' %>">
+                <div class="row">
+                    <% if (!events || events.length === 0) { %>
+                        <div class="col-12 text-center">
+                            <div class="alert alert-info mt-4" role="alert">
+                                Nessun evento trovato. Prova a modificare i filtri o la ricerca.
+                            </div>
+                        </div>
+                    <% } else { %>
+                    <% let distanceActive = false; %>
+                    <% events.forEach(event => { %>
+                        <% if(event.Prezzo === 0) { %>
+                            <% event.Prezzo = 'Gratuito'; %>
+                        <% } else { %>
+                            <% event.Prezzo = event.Prezzo.toFixed(2); %>
+                        <% } %>
+                        <% let json = JSON.stringify({
+                            img: (event.Locandina) ? event.Locandina : '/images/default-locandina.webp',
+                            title: event.Nome,
+                            desc: event.Descrizione,
+                            date: new Date(event.DataOra).toLocaleDateString("it-IT", { year: "numeric", month: "long", day: "numeric" }),
+                            time: new Date(event.DataOra).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }),
+                            school: event.NomeScuola,
+                            schoolUrl: "/scuola-spec/" + event.IDScuola + "/",
+                            city: event.Luogo,
+                            price: event.Prezzo
+                        }); %>
+
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 shadow-sm hover-effect">
+                                <img src="<%= (event.Locandina)? event.Locandina : '/images/default-locandina.webp' %>" class="card-img-top mt-2"
+                                    alt="Locandina Evento" style="max-height: 250px; object-fit: contain;">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= event.Nome %></h5>
+                                    <p class="card-text"><%= event.Descrizione %></p>
+                                    <p class="card-text">
+                                        <i class="bi bi-calendar-event"></i> <%= new Date(event.DataOra).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' }) %><br>
+                                        <i class="bi bi-clock"></i> <%= new Date(event.DataOra).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) %><br>
+                                        <i class="bi bi-person"></i> <%= event.NomeScuola %> <br>
+                                    </p>
+                                    <% if (event.distance || distanceActive) { %>
+                                        <% if (event.distance) { %>
+                                            <i class="bi bi-geo-alt"></i> Distanza: <%= event.distance.testo %> <br>
+                                        <% } else { %>
+                                            <i class="bi bi-geo-alt"></i> Distanza non disponibile <br>
+                                        <% } %>
+                                        <% distanceActive = true; %>
+                                    <% } %>
+                                    <p class="card-text"><i class="bi bi-geo-alt"></i> <%= event.Luogo %></p>
+                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#eventDetailsModal" data-event='<%= json %>'>Dettagli evento</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% });} %>
+                </div>
+            </div>
+            <!-- Fine card degli eventi -->
+        </main>
+        <!-- Fine sezione principale -->
+
+        <!-- Footer della pagina -->
+        <%- include('components/footer'); %>
+        <!-- Footer della pagina -->
+
+        <!-- Modal per ingrandire le copertine -->
+        <div class="modal fade" id="coverModal" tabindex="-1" aria-labelledby="coverModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-body p-0 text-center">
+                        <img src="" id="coverModalImg" class="img-fluid rounded shadow" alt="Copertina evento">
+                    </div>
+                    <button type="button" class="btn-close position-absolute top-0 end-0 m-3"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Offcanvas Filtro -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="filterOffcanvasLabel">Filtra eventi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <form method="GET" action="/eventi">
+                    <div class="mb-3">
+                        <label for="filterEventName" class="form-label"><i class="bi bi-tag me-2"></i>Nome evento</label>
+                        <input type="text" class="form-control" id="filterEventName" name="name" placeholder="Inserisci il nome dell'evento">
+                    </div>
+                    <div class="mb-3">
+                        <label for="filterSchool" class="form-label"><i class="bi bi-building me-2"></i>Scuola convenzionata</label>
+                        <input type="text" class="form-control" id="filterSchool" name="schoolName" placeholder="Nome della scuola">
+                    </div>
+                    <div class="mb-3">
+                        <label for="filterLocation" class="form-label"><i class="bi bi-geo-alt me-2"></i>Luogo</label>
+                        <input type="text" class="form-control" id="filterLocation" name="location" placeholder="Città, Paese">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-calendar me-2"></i>Intervallo di date</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="date" class="form-control" name="dataMin" placeholder="Data inizio">
+                            </div>
+                            <div class="col-6">
+                                <input type="date" class="form-control" name="dataMax" placeholder="Data fine">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-currency-euro me-2"></i>Intervallo di prezzo</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="minPrice" placeholder="Min" min="1">
+                                    <span class="input-group-text">€</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="maxPrice" placeholder="Max" min="1">
+                                    <span class="input-group-text">€</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Applica filtri</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal dettagli evento -->
+        <div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventDetailsModalLabel">Dettagli Evento</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Chiudi"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-5 text-center">
+                                <img id="eventDetailsImg" src="" alt="Locandina evento"
+                                    class="img-fluid rounded shadow mb-2" style="max-height:300px;">
+                            </div>
+                            <div class="col-md-7">
+                                <h4 id="eventDetailsTitle"></h4>
+                                <p id="eventDetailsDesc" class="mb-2"></p>
+                                <ul class="list-unstyled mb-2">
+                                    <li><i class="bi bi-calendar-event"></i> <span id="eventDetailsDate"></span> <i
+                                            class="bi bi-clock ms-2"></i> <span id="eventDetailsTime"></span></li>
+                                    <li><i class="bi bi-currency-euro"></i> <span id="eventDetailsPrice"></span>
+                                    </li>
+                                    <li><i class="bi bi-geo-alt"></i> <span id="eventDetailsCity"></span>, <span
+                                            id="eventDetailsAddress"></span></li>
+                                    <li><i class="bi bi-person"></i> <span id="eventDetailsSchool"></span></li>
+                                </ul>
+                                <a id="eventDetailsSchoolBtn" href="#" class="btn btn-outline-primary mt-2"
+                                    target="_blank">
+                                    Vai alla scuola
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fine Modal dettagli evento -->
+</body>
+</html>

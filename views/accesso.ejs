@@ -1,0 +1,105 @@
+<!--
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: This access page allows users to log in as dancers or schools.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • Accesso◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <link rel="stylesheet" href="/stylesheets/accesso.css">
+</head>
+
+<body class="bg-white">
+    <!-- Navbar -->
+    <%- include('components/header'); %>
+    <!-- Fine navbar -->
+
+    <!-- Contenuto principale -->
+    <main>
+        <div class="container d-flex justify-content-center align-items-center vh-100">
+            <div class="card shadow-lg p-4" id="login-form">
+                <h2 class="text-center mb-4">Accedi</h2>
+                <!-- Tabs for Login -->
+                <ul class="nav nav-tabs mb-4" role="tablist">
+                    <li class="nav-item w-50" role="presentation">
+                        <button class="nav-link active text-black w-100" id="dancer-tab" data-bs-toggle="tab" data-bs-target="#dancer-login" type="button" role="tab" aria-controls="dancer-login" aria-selected="true">
+                            <i class="bi bi-person"></i> Ballerini
+                        </button>
+                    </li>
+                    <li class="nav-item w-50" role="presentation">
+                        <button class="nav-link text-black w-100" id="school-tab" data-bs-toggle="tab" data-bs-target="#school-login" type="button" role="tab" aria-controls="school-login" aria-selected="false">
+                            <i class="bi bi-building"></i> Scuole
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <!-- Dancer Login -->
+                    <div class="tab-pane fade show active" id="dancer-login" role="tabpanel" aria-labelledby="dancer-tab">
+                        <form method="POST" action="/accesso">
+                            <div class="mb-3">
+                                <label for="dancer-email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="dancer-email" name="email" placeholder="Inserisci la tua email" autocomplete="off" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dancer-password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="dancer-password" name="password" placeholder="Inserisci la tua password" autocomplete="off" required>
+                            </div>
+                            <input type="hidden" name="type" value="dancer">
+                            <button type="submit" class="btn btn-primary w-100">Accedi</button>
+                        </form>
+                    </div>
+                    <!-- School Login -->
+                    <div class="tab-pane fade" id="school-login" role="tabpanel" aria-labelledby="school-tab">
+                        <form method="POST" action="/accesso">
+                            <div class="mb-3">
+                                <label for="school-email" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="school-email" name="email" placeholder="Inserisci l'email della scuola" autocomplete="off" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="school-password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="school-password" name="password" placeholder="Inserisci la tua password" autocomplete="off" required>
+                            </div>
+                            <input type="hidden" name="type" value="school">
+                            <button type="submit" class="btn btn-primary w-100">Accedi</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <p class="mb-0">Non hai un account? <a href="/registrazione" class="text-decoration-none">Registrati</a></p>
+                </div>
+                <% if (messages && messages.length > 0) { %>
+                    <div class="alert alert-danger mt-3" role="alert">
+                        <ul class="mb-0">
+                            <% messages.forEach(function(message) { %>
+                                <li><%= message %></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer della pagina -->
+    <%- include('components/footer'); %>
+    <!-- Footer della pagina -->
+</body>
+
+</html>

@@ -1,0 +1,526 @@
+<!-- 
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: DanceEMotion - This page is a template for the specific school page. It features
+    details about the school, logo, contact information, a list of associated events, a calendar for courses,
+    a weekly schedule, and a footer with links to social media and other useful links.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • <%= school.Nome %>◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <!-- Custom JS scripts -->
+    <script src="/javascripts/calendar.js"></script>
+    <script src="/javascripts/scuola-spec.js" defer></script>
+</head>
+
+<body class="bg-white">
+    <header>
+        <!-- Navbar principale -->
+        <%- include('components/header'); %>
+        <!-- Fine navbar principale -->
+    </header>
+
+    <div class="container mt-4 row mx-auto">
+        <!-- Side content -->
+        <aside class="bg-light border-end border-1 shadow-sm col-md-4 mb-4 border rounded-3">
+            <div class="container-fluid p-3 text-center mt-4">
+                <!-- Circle Logo -->
+                <img src="<%= (school.ImmagineProfilo) ? school.ImmagineProfilo : '/images/logo-black.png' %>" alt="School Logo" class="border border-2 rounded-circle mb-3"
+                    width="100" height="100">
+                <!-- Contact Information -->
+                <h2 class="h5 text-center"><%= school.Nome %></h2>
+                <table class="table-light table border-0">
+                    <tbody>
+                        <tr>
+                            <td class="border-0 text-end"><i class="bi bi-geo-alt"></i></td>
+                            <td class="border-0 text-start">
+                                <a id="school-address" href="https://www.google.com/maps/place/<%= school.Indirizzo + ', ' + school.Citta + ' (' + school.CAP + ') ' + school.Provincia + ' ' + school.Regione %>"
+                                    target="_blank" class="text-decoration-none text-muted">
+                                    <%= school.Indirizzo + ', ' + school.Citta + ', ' + school.Regione %>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-0 text-end"><i class="bi bi-telephone"></i></td>
+                            <td class="border-0 text-start">
+                                <a id="school-phone" href="tel:<%= school.Telefono %>"
+                                    class="text-decoration-none text-muted"><%= school.Telefono %></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-0 text-end"><i class="bi bi-envelope"></i></td>
+                            <td class="border-0 text-start">
+                                <a id="school-email" class="text-decoration-none text-muted"
+                                    href="mailto:<%= school.Email %>"><%= school.Email %></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Follow Button -->
+                <% if (user && user.IDBallerino) { %>
+                    <% if (following) { %>
+                        <form method="POST" action="./smetti-seguire">
+                            <button type="submit" class="btn btn-outline-secondary mt-3" id="unfollow-button">
+                                <i class="bi bi-heart-fill"></i> Non seguire più
+                            </button>
+                        </form>
+                    <% } else { %>
+                        <form method="POST" action="./segui">
+                            <button type="submit" class="btn btn-outline-danger mt-3" id="follow-button">
+                                <i class="bi bi-heart"></i> Segui
+                            </button>
+                        </form>
+                <% }} %>
+            </div>
+        </aside>
+        <main class="col-md-8">
+            <!-- School Brief Description -->
+            <div class="container-fluid p-3 mb-4 bg-light border rounded-3 shadow-sm">
+                <h2 class="h5">Descrizione</h2>
+                <p class="text-muted" style="white-space: pre-line; word-break: break-all;"><%= school.Descrizione %></p>
+            </div>
+            <!-- Events List -->
+            <div class="container-fluid p-3 mb-4 bg-light border rounded-3 shadow-sm">
+                <h2 class="h5">Prossimi Eventi</h2>
+                <% if(!events || events.length === 0) { %>
+                    <div class="alert alert-info text-center" role="alert">
+                        Nessun evento in programma al momento.
+                    </div>
+                <% } else { %>
+                <ul class="list-group list-group-flush">
+                    <% events.forEach(event => { %>
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold"><i class="bi bi-music-note-beamed"></i> <%= event.Nome %></div>
+                                <p class="mb-1 text-muted"><i class="bi bi-calendar-event"></i> <%= new Date(event.DataOra).toLocaleString('it-IT', { dateStyle: 'medium', timeStyle: 'short' }) %></p>
+                            <p class="mb-0 text-muted"><i class="bi bi-geo-alt"></i> <%= event.Luogo %></p>
+                            <p class="mb-0 text-muted"><i class="bi bi-cash-coin"></i> <% if (event.Prezzo) { %> Prezzo: €<%= event.Prezzo %> <% } else { %> Gratuito <% } %></p>
+                        </div>
+                        <div class="d-flex flex-column align-items-end">
+                            <button class="btn btn-sm btn-outline-secondary event-button" data-event-id="<%= event.IDEvento %>" data-event-name="<%= event.Nome %>" data-event-descrizione="<%= event.Descrizione %>" data-event-date="<%= new Date(event.DataOra).toLocaleString('it-IT', { dateStyle: 'medium', timeStyle: 'short' }) %>" data-event-location="<%= event.Luogo %>" data-event-price="<%= event.Prezzo ? '€' + event.Prezzo : 'Gratuito' %>" data-event-poster="<%= event.Locandina %>" >Dettagli</button>
+                        </div>
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } %>
+            </div>
+
+            <!-- Calendar for Courses -->
+            <div class="container-fluid p-3 mb-4 bg-light border rounded-3 shadow-sm">
+                <h2 class="h5">Calendario Corsi</h2>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button class="btn btn-sm btn-outline-secondary" id="prev-month">&lt; Mese Precedente</button>
+                    <span id="current-month" class="fw-bold">Marzo 2025</span>
+                    <button class="btn btn-sm btn-outline-secondary" id="next-month">Mese Successivo &gt;</button>
+                </div>
+                <div id="calendar" class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>Lunedì</th>
+                                <th>Martedì</th>
+                                <th>Mercoledì</th>
+                                <th>Giovedì</th>
+                                <th>Venerdì</th>
+                                <th>Sabato</th>
+                                <th>Domenica</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendar-body">
+                            <!-- Calendar days will be dynamically generated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Corsi disponibili (schede dettagliate suddivise) -->
+            <div class="container-fluid p-3 mb-4 bg-light border rounded-3 shadow-sm">
+                <h2 class="h5 mb-4">Corsi Disponibili</h2>
+                <!-- Lezioni Periodiche -->
+                <h3 class="h6 mb-3"><i class="bi bi-calendar3"></i> Lezioni Periodiche</h3>
+                <div class="row g-3 mb-4">
+                    <% if(courses && courses.filter(course => course.Tipologia === 'Periodica').length > 0) { %>
+                        <% courses.filter(course => course.Tipologia === 'Periodica').forEach(course => { %>
+                            <div class="col-md-6 hover-effect-reverse">
+                                <div class="card h-100 shadow-sm position-relative">
+                                    <span class="badge bg-secondary position-absolute top-0 end-0 m-2"><%= course.Livello %></span>
+                                    <div class="card-body d-flex flex-column justify-content-between">
+                                        <div>
+                                            <h5 class="card-title mb-3"><i class="bi bi-music-note-beamed text-danger"></i> <%= course.Nome %></h5>
+                                            <p class="card-text mb-2"><i class="bi bi-person-badge"></i> <strong>Istruttore:</strong> <%= course.Istruttore %></p>
+                                            <p class="card-text mb-2"><i class="bi bi-calendar-event"></i> <strong>Orario:</strong> <%= course.OrarioInizio + ' - ' + course.OrarioFine %></p>
+                                            <p class="card-text mb-2"><i class="bi bi-cash-coin"></i> <strong>Prezzo:</strong> €<%= course.Prezzo %> a lezione <span class="text-muted small">(<%= course.Prezzo*4 %>/mese)</span></p>
+                                            <p class="card-text mb-2"><i class="bi bi-repeat"></i> <strong>Frequenza:</strong> Settimanale, al <%= new Date(course.DataInizio).toLocaleDateString('it-IT', { weekday: 'long' }) %></p>
+                                            <!-- Fine corso -->
+                                            <p class="card-text mb-2"><i class="bi bi-calendar2-week"></i> <strong>Inizio:</strong> <%= new Date(course.DataInizio).toLocaleDateString('it-IT') %></p>
+                                            <% if (course.DataFine) { %>
+                                                <p class="card-text mb-2"><i class="bi bi-calendar2-x"></i> <strong>Fine:</strong> <%= new Date(course.DataFine).toLocaleDateString('it-IT') %></p>
+                                            <% } %>
+                                        </div>
+                                        <div class="d-flex align-items-center mt-3 align-self-end w-100 justify-content-between">
+                                            <% if(user && user.IDBallerino) { %>
+                                            <button class="btn btn-primary me-2 course-button"
+                                                data-course-id="<%= course.IDCorso %>"
+                                                data-course-name="<%= course.Nome %>"
+                                                data-course-instructor="<%= course.Istruttore %>"
+                                                data-course-level="<%= course.Livello %>"
+                                                data-course-time="<%= course.OrarioInizio + ' - ' + course.OrarioFine %>"
+                                                data-course-frequency="Settimanale, al <%= new Date(course.DataInizio).toLocaleDateString('it-IT', { weekday: 'long' }) %>"
+                                                data-course-price="<%= course.Prezzo %> a lezione (<%= course.Prezzo*4 %>/mese)"
+                                            ><i class="bi bi-pencil-square"></i> Iscriviti</button>
+                                            <% } else { %>
+                                                <p class="text-muted mb-0">Accedi per iscriverti</p>
+                                            <% } %>
+                                            <% if(courseRating && courseRating.find(i => i.IDCorso == course.IDCorso)) { %>
+                                                <span class="text-warning small ms-auto">
+                                                    <% let filling = 5 - Math.floor(courseRating.find(i => i.IDCorso == course.IDCorso).AverageRating); %>
+                                                    <% for (let i = 0; i < Math.floor(courseRating.find(i => i.IDCorso == course.IDCorso).AverageRating); i++) { %>
+                                                        <i class="bi bi-star-fill"></i>
+                                                    <% } %>
+                                                    <% for (let i = 0; i < filling; i++) { %>
+                                                        <i class="bi bi-star"></i>
+                                                    <% } %>
+                                                </span>
+                                            <% } else { %>
+                                                <span class="text-muted small ms-auto">
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="col-12">
+                            <div class="alert alert-info text-center" role="alert">
+                                Nessun corso periodico disponibile al momento.
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <!-- Workshop (Lezioni Singole) -->
+                <h3 class="h6 mb-3"><i class="bi bi-calendar2-event"></i> Workshop / Lezioni Singole</h3>
+                <div class="row g-3 mb-4">
+                    <% if(courses && courses.filter(course => course.Tipologia === 'Singola').length > 0) { %>
+                        <% courses.filter(course => course.Tipologia === 'Singola').forEach(course => { %>
+                            <div class="col-md-6 hover-effect-reverse">
+                                <div class="card h-100 shadow-sm border-info position-relative">
+                                    <span class="badge bg-info text-dark position-absolute top-0 end-0 m-2"><%= course.Livello %></span>
+                                    <div class="card-body d-flex flex-column justify-content-between">
+                                        <div>
+                                            <h5 class="card-title mb-3"><i class="bi bi-calendar2-event text-info"></i> <%= course.Nome %></h5>
+                                            <p class="card-text mb-2"><i class="bi bi-person-badge"></i> <strong>Istruttore:</strong> <%= course.Istruttore %></p>
+                                            <p class="card-text mb-2"><i class="bi bi-calendar-event"></i> <strong>Data:</strong> <%= (course.DataInizio) ? new Date(course.DataInizio).toLocaleDateString('it-IT') : 'Su prenotazione' %></p>
+                                            <p class="card-text mb-2"><i class="bi bi-clock"></i> <strong>Orario:</strong> <%= course.OrarioInizio + ' - ' + course.OrarioFine %></p>
+                                            <p class="card-text mb-2"><i class="bi bi-cash-coin"></i> <strong>Prezzo:</strong> €<%= course.Prezzo %></p>
+                                            <p class="card-text mb-0"><i class="bi bi-arrow-repeat"></i> <strong>Frequenza:</strong> Singola</p>
+                                        </div>
+                                        <div class="d-flex align-items-center mt-3 align-self-end w-100 justify-content-between">
+                                            <% if(user && user.IDBallerino) { %>
+                                            <button class="btn btn-info me-2 text-white course-button"
+                                                data-course-id="<%= course.IDCorso %>"
+                                                data-course-name="<%= course.Nome %>"
+                                                data-course-instructor="<%= course.Istruttore %>"
+                                                data-course-level="<%= course.Livello %>"
+                                                data-course-time="<%= course.OrarioInizio + ' - ' + course.OrarioFine %>"
+                                                data-course-frequency="Singola, il <%= new Date(course.DataInizio).toLocaleDateString('it-IT') %>"
+                                                data-course-price="<%= course.Prezzo %>">
+                                                <i class="bi bi-pencil-square"></i> Prenota</button>
+                                            <% } else { %>
+                                                <p class="text-muted mb-0">Accedi per prenotare</p>
+                                            <% } %>
+                                            <% if(courseRating && courseRating.find(i => i.IDCorso == course.IDCorso)) { %>
+                                                <span class="text-warning small ms-auto">
+                                                    <% let filling = 5 - Math.floor(courseRating.find(i => i.IDCorso == course.IDCorso).AverageRating); %>
+                                                    <% for (let i = 0; i < Math.floor(courseRating.find(i => i.IDCorso == course.IDCorso).AverageRating); i++) { %>
+                                                        <i class="bi bi-star-fill"></i>
+                                                    <% } %>
+                                                    <% for (let i = 0; i < filling; i++) { %>
+                                                        <i class="bi bi-star"></i>
+                                                    <% } %>
+                                                </span>
+                                            <% } else { %>
+                                                <span class="text-muted small ms-auto">
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="col-12">
+                            <div class="alert alert-info text-center" role="alert">
+                                Nessun workshop o lezione singola disponibile al momento.
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <!-- Lezioni Private -->
+                <h3 class="h6 mb-3"><i class="bi bi-person-plus"></i> Lezioni Private</h3>
+                <div class="row g-3">
+                    <% if(courses && courses.filter(course => course.Tipologia === 'Privata').length > 0) { %>
+                        <% courses.filter(course => course.Tipologia === 'Privata').forEach(course => { %>
+                            <div class="col-md-6 hover-effect-reverse">
+                                <div class="card h-100 shadow-sm border-success position-relative">
+                                    <span class="badge bg-success position-absolute top-0 end-0 m-2"><%= course.Livello %></span>
+                                    <div class="card-body d-flex flex-column justify-content-between">
+                                        <div>
+                                            <h5 class="card-title mb-3"><i class="bi bi-person-plus text-success"></i> <%= course.Nome %></h5>
+                                            <p class="card-text mb-2"><i class="bi bi-person-badge"></i> <strong>Istruttore:</strong> <%= course.Istruttore %></p>
+                                            <p class="card-text mb-2"><i class="bi bi-calendar-event"></i> <strong>Data:</strong> <%= (course.DataInizio)? new Date(course.DataInizio).toLocaleDateString('it-IT') : 'Su prenotazione' %></p>
+                                            <p class="card-text mb-2"><i class="bi bi-clock"></i> <strong>Orario:</strong> <%= (course.OrarioInizio) ? course.OrarioInizio + ' - ' + course.OrarioFine : 'Su prenotazione' %></p>
+                                            <p class="card-text mb-2"><i class="bi bi-cash-coin"></i> <strong>Prezzo:</strong> €<%= course.Prezzo %>/ora</p>
+                                            <p class="card-text mb-0"><i class="bi bi-arrow-repeat"></i> <strong>Frequenza:</strong> Singola</p>
+                                        </div>
+                                        <div class="d-flex align-items-center mt-3 align-self-end w-100 justify-content-between">
+                                            <% if(user && user.IDBallerino) { %>
+                                            <button class="btn btn-success me-2 course-button"
+                                                data-course-id="<%= course.IDCorso %>"
+                                                data-course-name="<%= course.Nome %>"
+                                                data-course-instructor="<%= course.Istruttore %>"
+                                                data-course-level="<%= course.Livello %>"
+                                                data-course-time="<%= (course.OrarioInizio) ? course.OrarioInizio + ' - ' + course.OrarioFine : 'Su prenotazione' %>"
+                                                data-course-frequency="<%= (course.DataInizio) ? 'Singola, il ' + new Date(course.DataInizio).toLocaleDateString('it-IT') : 'Su prenotazione' %>"
+                                                data-course-price="<%= course.Prezzo %>/ora">
+                                                <i class="bi bi-pencil-square"></i> Prenota</button>
+                                                <% } else { %>
+                                                    <p class="text-muted mb-0">Accedi per prenotare</p>
+                                                <% } %>
+                                            <% if(courseRating && courseRating.find(i => i.IDCorso == course.IDCorso)) { %>
+                                                <span class="text-warning small ms-auto">
+                                                    <% let filling = 5 - Math.floor(courseRating.find(i => i.IDCorso == course.IDCorso).AverageRating); %>
+                                                    <% for (let i = 0; i < Math.floor(courseRating.find(i => i.IDCorso == course.IDCorso).AverageRating); i++) { %>
+                                                        <i class="bi bi-star-fill"></i>
+                                                    <% } %>
+                                                    <% for (let i = 0; i < filling; i++) { %>
+                                                        <i class="bi bi-star"></i>
+                                                    <% } %>
+                                                </span>
+                                            <% } else { %>
+                                                <span class="text-muted small ms-auto">
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                    <i class="bi bi-star"></i>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="col-12">
+                            <div class="alert alert-info text-center" role="alert">
+                                Nessuna lezione privata disponibile al momento.
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+            <!-- Fine corsi disponibili -->
+        </main>
+    </div>
+
+    <!-- Recensioni della scuola - Titolo blocco, pulsante di apertura e chiusura -->
+    <div class="container p-4 mb-4 bg-light border rounded-3 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h5">Valutazione dagli utenti</h2>
+            <div class="d-flex align-items-center">
+                <% let averageRating = globalFeedback && globalFeedback.length > 0 ? globalFeedback.reduce((sum, feedback) => sum + feedback.Valutazione, 0) / globalFeedback.length : 0; %>
+                <span class="text-warning me-2">
+                    <% for (let i = 0; i < Math.floor(averageRating); i++) { %>
+                        <i class="bi bi-star-fill"></i>
+                    <% } %>
+                    <% if (averageRating % 1 !== 0) { %>
+                        <i class="bi bi-star-half"></i>
+                    <% } %>
+                </span>
+                <% if(!globalFeedback || globalFeedback.length === 0) { %>
+                    <span class="text-muted ms-2 me-1">Nessuna recensione disponibile</span>
+                <% } %>
+                <span class="text-muted">(<%= averageRating.toFixed(1) %>/5)</span>
+            </div>
+        </div>
+        <button class="btn btn-primary d-flex align-items-center" type="button" data-bs-toggle="collapse"
+            data-bs-target="#reviewCollapse" aria-expanded="false" aria-controls="reviewCollapse">
+            <i class="bi bi-eye me-2"></i> Mostra Recensioni
+        </button>
+        <div class="collapse mt-3" id="reviewCollapse">
+            <% if (globalFeedback && globalFeedback.length === 0) { %>
+                <div class="alert alert-info text-center" role="alert">
+                    Nessuna recensione disponibile al momento.
+                </div>
+            <% } else {%>
+            <div class="card card-body">
+                <!-- Recensioni -->
+                <% globalFeedback.forEach(feedback => { %>
+                <div class="mb-3">
+                    <div class="d-flex align-items-center">
+                        <span class="text-warning me-2">
+                            <% for (let i = 0; i < feedback.Valutazione; i++) { %>
+                                <i class="bi bi-star-fill"></i>
+                            <% } %>
+                        </span>
+                        <strong class="ms-2"></strong>
+                    </div>
+                    <p class="mb-0 text-muted"><em>Corso: <%= feedback.NomeCorso %> | Recensito da: <%= feedback.NomeBallerino %> <%= feedback.CognomeBallerino %></em></p>
+                    <p class="mb-1 text-muted"><em>Recensito il: <%= new Date(feedback.DataCreazione).toLocaleDateString('it-IT') %></em></p>
+
+                    <p class="text-muted" style="white-space: pre-wrap;"><%= feedback.Corpo %></p>
+                    <!-- Risposta della scuola -->
+                    <% console.log(feedbackAnswers); %>
+                    <% if(feedbackAnswers && feedbackAnswers.find(answer => answer.IDRecensione === feedback.IDRecensione)) { %>
+                    <div class="bg-light border-start border-3 ps-3 ms-4 mt-2">
+                        <span class="fw-bold text-primary"><i class="bi bi-reply"></i> Risposta della scuola:</span>
+                        <p class="mb-0 text-muted" style="white-space: pre-wrap;"><%= feedbackAnswers.find(answer => answer.IDRecensione === feedback.IDRecensione).Corpo %></p>
+                    </div>
+                    <% } %>
+                </div>
+                <% });} %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer della pagina -->
+    <%- include('components/footer'); %>
+
+    <% if (success) { %>
+    <!-- Toast for successful flash messages -->
+    <% success.forEach(function(message) { %>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Successo</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <%= message %>
+            </div>
+        </div>
+    </div>
+    <% });} %>
+
+    <% if (error) { %>
+        <% error.forEach(function(message) { %>
+            <!-- Toast for error flash messages -->
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto text-danger">Errore</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <%= message %>
+                    </div>
+                </div>
+            </div>
+    <% });} %>
+
+    <!-- Modal Evento Generico -->
+    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalLabel">Dettagli Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5 text-center mb-3 mb-md-0">
+                            <img src="/images/default-locandina.webp" id="modal-event-poster" alt="Locandina Evento" class="img-fluid rounded border">
+                        </div>
+                        <div class="col-md-7">
+                            <h4 id="modal-event-title" class="mb-2"></h4>
+                            <p class="mb-1 text-muted"><i class="bi bi-calendar-event"></i> <span id="modal-event-date"></span></p>
+                            <p class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> <span id="modal-event-location"></span></p>
+                            <p class="mb-1 text-muted"><i class="bi bi-cash-coin"></i> <span id="modal-event-price"></span></p>
+                            <hr>
+                            <p id="modal-event-description" class="text-muted"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <% if (user && user.IDBallerino) { %>
+                    <form id="event-booking-form" method="POST" action="/scuola-spec/<%= school.IDScuola %>/prenota-evento">
+                        <input type="hidden" name="IDEvento" id="modal-event-id" value="">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Prenota Evento</button>
+                    </form>
+                    <% } else { %>
+                        <p class="text-muted mb-1 me-2">Accedi per prenotare</p>
+                    <% } %>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <% if(user && user.IDBallerino) { %>
+    <!-- Modal Prenotazione Corso -->
+    <div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="courseModalLabel">Prenota Corso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="modal-course-title" class="mb-3"></h4>
+                    <p class="mb-1 text-muted"><i class="bi bi-person-badge"></i> <span id="modal-course-instructor"></span></p>
+                    <p class="mb-1 text-muted"><i class="bi bi-bar-chart"></i> <span id="modal-course-level"></span></p>
+                    <p class="mb-1 text-muted"><i class="bi bi-calendar-event"></i> <span id="modal-course-time"></span></p>
+                    <p class="mb-1 text-muted"><i class="bi bi-repeat"></i> <span id="modal-course-frequency"></span></p>
+                    <p class="mb-1 text-muted"><i class="bi bi-cash-coin"></i> <span id="modal-course-price"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <form id="course-booking-form" method="POST" action="/scuola-spec/<%= school.IDScuola %>/prenota-corso">
+                        <input type="hidden" name="IDCorso" id="modal-course-id" value="">
+                    </form>
+                    <button form="course-booking-form" type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Prenotazione</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- Custom JS for Calendar -->
+    <script type="application/json" id="calendar-data">
+        <%- JSON.stringify(calendarCourses) %>
+    </script>
+
+    <script>
+        const data = JSON.parse(document.getElementById('calendar-data').textContent);
+        let calendar = new Calendar();
+        calendar.addActivityJSON(data);
+    </script>
+</body>
+</html>

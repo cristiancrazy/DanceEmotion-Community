@@ -1,0 +1,71 @@
+/*
+ * Author: Cristian Capraro, 20054593
+ * All rights reserved. Do not distribute or modify without permission.
+ * Project: DanceEMotion
+ * Date: 2025-04
+ * Description: This is the base CSS file for the project. It contains the global styles and font imports.
+ */
+
+
+.brand-font {
+    font-family: 'BrandFont', 'sans-serif';
+}
+
+.active {
+    border: #000 solid 2px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0px;
+}
+
+/* Animate the underline on hover from center to the edges */
+.nav-link-underline {
+    position: relative;
+    text-decoration: none;
+}
+
+.nav-link-underline::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0; /* Adjust this value to position the underline */
+    width: 100%;
+    height: 2px; /* Adjust the thickness of the underline */
+    background-color: #000; /* Change to your desired color */
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
+    transform-origin: center;
+}
+
+.nav-link-underline:hover::after {
+    transform: scaleX(1);
+}
+
+/* Hover effect for cards and other items */
+
+.hover-effect {
+    transition: transform 0.3s ease;
+}
+
+.hover-effect:hover {
+    transform: scale(1.05);
+}
+
+/* Reverse hover effect for cards and other items */
+.hover-effect-reverse {
+    transition: transform 0.3s ease;
+}
+
+.hover-effect-reverse:hover {
+    transform: scale(0.95);
+}
+
+.logout-btn:active {
+    color: #fff;
+}
+
+@font-face {
+    font-family: 'BrandFont';
+    src: url(./CalSans-Regular.ttf) format('truetype');
+}

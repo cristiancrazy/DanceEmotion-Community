@@ -1,0 +1,212 @@
+<!--
+    Author: Cristian Capraro, 20054593@studenti.uniupo.it
+    Date: 04-2025
+    Description: Courses finder page for DanceEMotion platform. It includes a search bar, a list of dance courses with cards, 
+    and a footer with useful links and social media icons.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description"
+        content="DanceEMotion - Cerca le migliori scuole di ballo in Italia e le loro offerte formative. Scopri corsi di Urban, balli latino-americani, classici, danze standard e molto altro!">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>►DanceEMotion • Corsi◄</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/images/logo-black.png" type="image/png" sizes="64x64">
+
+    <!-- BS5 Bootstrap CSS and JS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+    <script src="/bs/js/bootstrap.bundle.min.js"></script>
+    <!-- BS5 Icons CSS -->
+    <link rel="stylesheet" href="/bs-icons/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <%- include('components/header') %>
+    <!-- End Header -->
+
+    <!-- Main Content -->
+    <main class="">
+        <!-- Barra di ricerca -->
+        <header class="p-2">
+            <div class="container-fluid mt-3 mb-3">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                        <form class="d-flex gap-2" role="search" action="/corsi" method="GET">
+                            <input class="form-control" name="name" type="search" placeholder="Cerca corsi..."
+                                aria-label="Search">
+                            <!-- Filters -->
+                            <button class="btn btn-outline-secondary d-inline-flex" id="filterButton"
+                                type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
+                                <i class="bi bi-filter"></i>Filtri
+                            </button>
+                            <% if(searchMode) { %>
+                                <a class="btn btn-outline-danger" href="/corsi">Reset</a>
+                            <% } %>
+                            <button class="btn btn-outline-success" type="submit">Cerca</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Fine barra di ricerca -->
+
+        <!-- Card degli eventi -->
+        <div class="container <%= (!courses || courses.length === 0) ? 'vh-100' : '' %>">
+            <div class="row">
+                <% if (!courses || courses.length === 0) { %>
+                    <div class="col-12 text-center">
+                        <div class="alert alert-info mt-4" role="alert">
+                            Nessun corso trovato. Prova a modificare i filtri o la ricerca.
+                        </div>
+                    </div>
+                <% } else { %>
+                    <% courses.forEach(courses => { %>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 shadow-sm hover-effect">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= courses.Nome %></h5>
+                                    <!-- Badge tipologia corso -->
+                                    <% if (courses.Tipologia == 'Privata') { %>
+                                        <span class="badge bg-success mb-2">Lezione <%= courses.Tipologia %></span>
+                                    <% } else if(courses.Tipologia == 'Singola') { %>
+                                        <span class="badge bg-info mb-2">Lezione <%= courses.Tipologia %></span>
+                                    <% } else { %>
+                                        <span class="badge bg-primary mb-2">Lezione <%= courses.Tipologia %></span>
+                                    <% } %>
+                                    <!-- Badge categoria corso -->
+                                    <span class="badge bg-dark mb-2"><%= courses.CategoriaCorso %></span>
+                                    <!-- Badge livello -->
+                                    <span class="badge bg-secondary mb-2"><%= courses.Livello %></span>
+                                    <p class="card-text">
+                                        <!-- Valutazione -->
+                                        <i class="bi bi-star-fill text-warning"></i> <strong>Valutazione:</strong>
+                                        <% if (courses.MediaValutazione) { %>
+                                            <%= courses.MediaValutazione.toFixed(1) %>/5
+                                        <% } else { %>
+                                            Nessuna valutazione
+                                        <% } %>
+                                        <br>
+                                        <!-- Scuola -->
+                                        <i class="bi bi-building"></i> <strong>Scuola:</strong> <%= courses.NomeScuola %> <br>
+                                        <!-- Istruttore -->
+                                        <i class="bi bi-person"></i> <strong>Istruttore:</strong> <%= courses.Istruttore %> <br>
+                                        <!-- Prezzo -->
+                                        <i class="bi bi-currency-euro"></i> <strong>Prezzo:</strong>
+                                            <%= courses.Prezzo.toFixed(2) %> €<%= (courses.Tipologia == 'Privata') ? '/ora' : '' %>
+                                            <br>                               
+                                        <!-- Data Inizio -->
+                                        <i class="bi bi-calendar"></i> <strong>Inizio corso:</strong> <%= (courses.DataInizio) ? new Date(courses.DataInizio).toLocaleDateString('it-IT') : 'Su prenotazione' %> <br>
+                                        <!-- Data Fine -->
+                                        <% if (courses.Tipologia == 'Periodica') { %>
+                                            <!-- Fine corso -->
+                                            <i class="bi bi-calendar"></i> <strong>Fine corso:</strong> <%= (courses.DataFine) ? new Date(courses.DataFine).toLocaleDateString('it-IT') : 'Su prenotazione' %> <br>
+                                            <!-- Frequenza corso -->
+                                            <i class="bi bi-repeat"></i> <strong>Frequenza:</strong> al <%= new Date(courses.DataInizio).toLocaleDateString('it-IT', { weekday: 'long' }) %> <br>
+                                        <% } else { %>
+                                            <i class="bi bi-repeat"></i> <strong>Frequenza:</strong> Singola <br> <br>
+                                        <% } %>
+
+                                    </p>
+                                    <!-- Full line button -->
+                                    <div class="d-grid">
+                                        <a href="/scuola-spec/<%= courses.IDScuola %>/" class="btn btn-primary">Vai al corso</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% });} %>
+                </div>
+            </div>
+            <!-- Fine card degli eventi -->
+        </div>
+
+        <!-- Offcanvas Filtro -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="filterOffcanvas" aria-labelledby="filterOffcanvasLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="filterOffcanvasLabel">Filtra i corsi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <form id="filterForm" action="/corsi" method="GET">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="bi bi-tag me-2"></i>Nome Corso
+                        </label>
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Cerca per nome...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipologia" class="form-label">
+                            <i class="bi bi-list-ul me-2"></i>Tipologia
+                        </label>
+                        <select class="form-select" name="tipologia" id="tipologia">
+                            <option value="">Tutte</option>
+                            <option value="Privata">Privata</option>
+                            <option value="Singola">Singola</option>
+                            <option value="Periodica">Periodica</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">
+                            <i class="bi bi-music-note-beamed me-2"></i>Categoria
+                        </label>
+                        <select class="form-select" name="categoria" id="categoria">
+                            <option value="">Tutte</option>
+                            <option value="Urban">Urban</option>
+                            <option value="Latino & Caraibico">Latino & Caraibico</option>
+                            <option value="Classico & Moderno">Classico & Moderno</option>
+                            <option value="Coreografico">Coreografico</option>
+                            <option value="Social & Swing">Social & Swing</option>
+                            <option value="Gruppo & Fitness">Gruppo & Fitness</option>
+                            <option value="Danze Orientali & Etniche">Danze Orientali & Etniche</option>
+                            <option value="Folklore & Tradizione">Folklore & Tradizione</option>
+                            <option value="Teatrale & Performativo">Teatrale & Performativo</option>
+                            <option value="Acrobatico & Espressivo">Acrobatico & Espressivo</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="livello" class="form-label">
+                            <i class="bi bi-ladder me-2"></i>Livello
+                        </label>
+                        <select class="form-select" name="livello" id="livello">
+                            <option value="">Tutti</option>
+                            <option value="Principiante">Principiante</option>
+                            <option value="Intermedio">Intermedio</option>
+                            <option value="Avanzato">Avanzato</option>
+                            <option value="Open">Open</option>
+                            <option value="Personalizzato">Personalizzato</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-currency-euro me-2"></i>Prezzo (€)
+                        </label>
+                        <div class="d-flex gap-2">
+                            <input type="number" class="form-control" name="prezzoMin" placeholder="Min" min="0" step="0.01">
+                            <input type="number" class="form-control" name="prezzoMax" placeholder="Max" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Applica filtri</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End Offcanvas Filtro -->
+    </main>
+    <!-- End Main Content -->
+    
+    <!-- Footer -->
+    <%- include('components/footer') %>
+    <!-- End Footer -->
+</body>
+
+</html>
