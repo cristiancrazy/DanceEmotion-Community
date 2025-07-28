@@ -5,6 +5,10 @@
 **DanceEmotion** è un'applicazione web progettata per favorire l'incontro tra ballerini e scuole di danza.
 Gli utenti possono scoprire corsi, eventi e materiali, prenotare lezioni, lasciare recensioni e ricevere aggiornamenti dalle scuole seguite.
 
+<div align="center">
+  <img alt="Piattaforma DanceEmotion" src="public/images/logo-white.png" />
+</div>
+
 ## Video di presentazione
 
 Nel seguente video di presentazione viene effettuata una breve panoramica del progetto, vengono discusse le **scelte progettuali adottate**: layout, struttura del database, componenti principali, logiche funzionali e scelte implementative.
