@@ -11,6 +11,8 @@ services:
       # (utilizzo con reverse proxy NGINX)
       - "127.0.0.1:6568:6568"
     volumes:
+      # Mappa il file locale .env al server dentro il container
+      - ./.env:/app/.env
       # Mappa il file del database locale del server dentro il container
       - ./danceemotion.db:/app/database/danceemotion.db
       # Mappa le cartelle dinamiche dell'applicazione
