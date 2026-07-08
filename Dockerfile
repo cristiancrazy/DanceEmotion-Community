@@ -19,18 +19,21 @@ RUN curl -L https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.
 # -----------------------------
 #  Bootstrap Icons
 # -----------------------------
-RUN mkdir -p /app/public/bs-icons
+RUN mkdir -p /app/public/bs-icons/fonts/
 
 RUN curl -L https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css \
-         -o /app/public/bs-icons/bootstrap-icons.css && \
+         -o /app/public/bs-icons/bootstrap-icons.min.css && \
     curl -L https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2 \
-         -o /app/public/bs-icons/bootstrap-icons.woff2
+         -o /app/public/bs-icons/fonts/bootstrap-icons.woff2 && \
+    curl -L https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff \
+         -o /app/public/bs-icons/fonts/bootstrap-icons.woff
+         
 
 # ------------------------------------
 #  File .env generato automaticamente
 # ------------------------------------
 RUN echo "ADDRESS=\"0.0.0.0\"" > /app/.env && \
-    echo "PORT=\'3000\'" >> /app/.env && \
+    echo "PORT=\'6568\'" >> /app/.env && \
     echo "SESSIONSS=\"$(head -c 32 /dev/urandom | base64)\"" >> /app/.env && \
     echo "GOOGLEAPIKEY=\"API_KEY\"" >> /app/.env
 
@@ -43,6 +46,4 @@ RUN npm ci --only=production
 # Copia il resto del progetto
 COPY . .
 
-# Avvia servizio
-EXPOSE 3000
 CMD ["npm", "start"]
