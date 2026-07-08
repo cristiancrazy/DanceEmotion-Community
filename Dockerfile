@@ -29,10 +29,10 @@ RUN curl -L https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-i
 # ------------------------------------
 #  File .env generato automaticamente
 # ------------------------------------
-RUN echo "ADDRESS=0.0.0.0" > /app/.env && \
-    echo "PORT=3000" >> /app/.env && \
-    echo "SESSIONS=$(head -c 32 /dev/urandom | base64)" >> /app/.env && \
-    echo "GOOGLEAPIKEY=API_KEY" >> /app/.env
+RUN echo "ADDRESS=\"0.0.0.0\"" > /app/.env && \
+    echo "PORT=\'3000\'" >> /app/.env && \
+    echo "SESSIONSS=\"$(head -c 32 /dev/urandom | base64)\"" >> /app/.env && \
+    echo "GOOGLEAPIKEY=\"API_KEY\"" >> /app/.env
 
 # ----------------------------------
 #  Installazione dipendenze NodeJS
