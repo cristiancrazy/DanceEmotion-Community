@@ -1,0 +1,32 @@
+node_modules/
+
+# Log vari
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Git repository
+.git/
+.gitignore
+
+# File di ambiente locali
+.env
+.env.*
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# Docker compose locali
+docker-compose.yml
+  
+# Cartelle di editor
+.vscode/
+.idea/
+
+# Cache varie
+*.cache
+
+# Altri file
+docs/
+database/
