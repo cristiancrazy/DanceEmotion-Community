@@ -32,7 +32,7 @@ docker-compose.yml
 
 # Altri file
 docs/
-database/
+database/DDL-DanceEmotion.sql
 README.md
 
 # Script files
