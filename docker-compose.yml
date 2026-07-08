@@ -9,7 +9,7 @@ services:
     ports:
       # Nota: risponde solo alle richieste interne
       # (utilizzo con reverse proxy NGINX)
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:6568:6568"
     volumes:
       # Mappa il file del database locale del server dentro il container
       - ./danceemotion.db:/app/database/danceemotion.db
