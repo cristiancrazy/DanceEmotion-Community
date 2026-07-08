@@ -39,7 +39,7 @@ Nella cartella del progetto è presente un file nel quale dovranno essere specif
 |---------------|--------------------------------------------------|
 | `ADDRESS`     | Indirizzo sul quale il server rimarrà in ascolto |
 | `PORT`        | Porta sul quale il server rimarrà in ascolto     |
-| `SESSIONS`    | Il secret per la gestione della sessione         |
+| `SESSIONSS`    | Il secret per la gestione della sessione         |
 | `GOOGLEAPIKEY`| L'API KEY per Distance Matrix API di Google      |
 
 ## Credenziali di esempio
