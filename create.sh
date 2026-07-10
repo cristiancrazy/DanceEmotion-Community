@@ -6,9 +6,11 @@ docker load -i ./danceemotionweb.tar
 
 # Creazione delle cartelle nella directory corrente (con -p per evitare errori se esistono già)
 echo "Creazione della struttura delle cartelle..."
-mkdir -p ./videos    # Creazione cartella video (static del sito)
-mkdir -p ./images    # Creazione cartella immagini (static del sito)
-mkdir -p ./uploads   # Creazione cartella upload (static del sito)
+mkdir -p ./videos    # Creazione cartella video (public del sito)
+mkdir -p ./images    # Creazione cartella immagini (public del sito)
+mkdir -p ./dancer    # Creazione cartella dancer (public del sito)
+mkdir -p ./school    # Creazione cartella school (public del sito)
+mkdir -p ./uploads   # Creazione cartella upload
 mkdir -p ./uploads/attachment # Creazione cartella allegati (files)
 mkdir -p ./uploads/dancer     # Creazione cartella ballerini (files)
 mkdir -p ./uploads/school      # Creazione cartella scuole (files)
