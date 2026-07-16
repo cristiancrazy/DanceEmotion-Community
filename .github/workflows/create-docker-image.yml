@@ -6,32 +6,52 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-save:
+  build-amd64:
     runs-on: ubuntu-latest
-
     steps:
-      # Scarica il codice del repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Configura Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Build dell'immagine ed esportazione in .tar
-      - name: Build and export Docker image
+      - name: Build AMD64 Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64 # Architetture ARM64 e x86_64
-          tags: danceemotionweb:latest
-          outputs: type=oci,dest=/tmp/danceemotionweb.tar
+          platforms: linux/amd64
+          tags: danceemotionweb:amd64
+          outputs: type=docker,dest=/tmp/danceemotionweb_amd64.tar
 
-      # Upload dell'immagine come artifact
-      - name: Upload Docker image artifact
+      - name: Upload AMD64 artifact
         uses: actions/upload-artifact@v4
         with:
-          name: danceemotionweb
-          path: /tmp/danceemotionweb.tar
+          name: danceemotionweb_amd64
+          path: /tmp/danceemotionweb_amd64.tar
+          retention-days: 5
+
+  build-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build ARM64 Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/arm64
+          tags: danceemotionweb:arm64
+          outputs: type=docker,dest=/tmp/danceemotionweb_arm64.tar
+
+      - name: Upload ARM64 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: danceemotionweb_arm64
+          path: /tmp/danceemotionweb_arm64.tar
           retention-days: 5
