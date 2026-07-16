@@ -24,8 +24,9 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64 # Architetture ARM64 e x86_64
           tags: danceemotionweb:latest
-          outputs: type=docker,dest=/tmp/danceemotionweb.tar
+          outputs: type=oci,dest=/tmp/danceemotionweb.tar
 
       # Upload dell'immagine come artifact
       - name: Upload Docker image artifact
